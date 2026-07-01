@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__199b65p._.js")
+R.c("server/chunks/ssr/1dqs_0cpwpg6._.js")
+R.c("server/chunks/ssr/1dqs_next_dist_esm_build_templates_app-page_11ryh0q.js")
+R.c("server/chunks/ssr/[root-of-the-server]__1erzx37._.js")
+R.c("server/chunks/ssr/1dqs_next_dist_0zjcx7z._.js")
+R.c("server/chunks/ssr/captanova-academy-mentors-section (4)_captanova_1haqj_j._.js")
+R.c("server/chunks/ssr/1dqs_next_dist_client_components_111j0t8._.js")
+R.c("server/chunks/ssr/1dqs_next_dist_client_components_builtin_forbidden_1t1uzys.js")
+R.c("server/chunks/ssr/1dqs_next_dist_client_components_builtin_unauthorized_1ccqqk4.js")
+R.c("server/chunks/ssr/0ouv_captanova__next-internal_server_app__not-found_page_actions_1b1pwlw.js")
+R.m(71832)
+module.exports=R.m(71832).exports

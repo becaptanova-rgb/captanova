@@ -1,0 +1,3 @@
+module.exports=[55527,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(48187);a.n(d("[project]/captanova-academy-mentors-section (4)/captanova/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},84057,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(48187);a.n(d("[project]/captanova-academy-mentors-section (4)/captanova/node_modules/next/dist/client/components/builtin/global-error.js"))},24352,a=>{"use strict";a.i(55527);var b=a.i(84057);a.n(b)},15054,a=>{a.n(a.i(24352))}];
+
+//# sourceMappingURL=1dqs_next_dist_client_components_builtin_global-error_13dtk9g.js.map
