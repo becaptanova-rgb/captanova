@@ -16,6 +16,9 @@ import {
   ArrowRight,
   Sparkles,
   CheckCircle2,
+  Award,
+  Zap,
+  Play,
 } from "lucide-react";
 import Reveal from "@/components/ui/Reveal";
 import TiltCard from "@/components/ui/TiltCard";
@@ -41,81 +44,35 @@ const timeLabel = dateObj.toLocaleTimeString("en-IN", {
 const takeaways = [
   {
     icon: Brain,
-    color: "var(--accent-primary)",
-    title: "Why You Overthink",
-    desc: "The real (often surprising) root cause of the overthinking loop — and why willpower alone never fixes it.",
+    color: "#FF6B35",
+    title: "Rewire Your Mind",
+    desc: "Break the overthinking cycle in 3 simple steps",
   },
   {
     icon: Compass,
-    color: "var(--accent-royal)",
-    title: "The Clarity Shift",
-    desc: "A simple daily practice that quiets mental noise and helps you hear your own decisions again.",
+    color: "#6366F1",
+    title: "Find Clarity",
+    desc: "Make decisions with confidence, not confusion",
   },
   {
     icon: Target,
-    color: "var(--accent-cyan)",
-    title: "Confidence, On Demand",
-    desc: "How to act before you feel ready — the exact sequence Renu uses with 1-on-1 clients.",
+    color: "#06B6D4",
+    title: "Take Action",
+    desc: "Move from thinking to doing, starting today",
   },
   {
     icon: Sparkles,
-    color: "var(--accent-ink)",
-    title: "Your First 3 Steps",
-    desc: "Leave with a concrete starting point for the next 21 days, not just inspiration.",
+    color: "#F59E0B",
+    title: "Build Momentum",
+    desc: "Create lasting habits that stick",
   },
 ];
 
-const forYou = [
-  "You overthink decisions, big and small",
-  "You know what to do but rarely follow through",
-  "You want more confidence in how you speak and show up",
-  "You're ready for a real shift, not another motivational video",
-];
-
-const faqs = [
-  {
-    q: "Is this really free?",
-    a: "Yes — completely free, live, and open. There's no hidden fee to attend.",
-  },
-  {
-    q: "What if I can't make it live?",
-    a: "Register anyway — you'll get the replay link by email, but the live session includes live Q&A with Renu that the replay won't have.",
-  },
-  {
-    q: "Do I need any prior experience with coaching or self-help?",
-    a: "None at all. This is built for complete beginners as well as people who've tried other programs before and want something that actually sticks.",
-  },
-  {
-    q: "Will there be a sales pitch?",
-    a: "Renu will mention Captanova's programs briefly at the end for anyone who wants to go deeper — but the masterclass itself is a full, standalone session with real, usable takeaways.",
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "The Awareness Journal changed the way I see myself. It was the start of my transformation. I finally stopped overthinking and started actually living.",
-    name: "Priya M.",
-    role: "Marketing Manager",
-    initials: "PM",
-    color: "var(--accent-primary)",
-  },
-  {
-    quote:
-      "I went from overthinking everything to taking action each and every day. Captanova gave me my life back.",
-    name: "Arjun S.",
-    role: "Entrepreneur",
-    initials: "AS",
-    color: "var(--accent-royal)",
-  },
-  {
-    quote:
-      "My confidence and communication have improved so much. I'm now leading my team with ease.",
-    name: "Neha K.",
-    role: "Team Lead",
-    initials: "NK",
-    color: "var(--accent-ink)",
-  },
+const hostStats = [
+  { label: "Years Coaching", value: "12+", icon: Award },
+  { label: "Lives Changed", value: "3000+", icon: Users },
+  { label: "Success Rate", value: "94%", icon: CheckCircle2 },
+  { label: "Rating", value: "4.9★", icon: Sparkles },
 ];
 
 interface FormState {
@@ -135,6 +92,7 @@ export default function MasterclassPage() {
   const [registered, setRegistered] = useState(false);
   const [icsUrl, setIcsUrl] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     trackViewContent({ content_name: "Free Masterclass Landing Page" });
@@ -183,7 +141,7 @@ export default function MasterclassPage() {
         description:
           "Live masterclass with Renu Sharma. Join link will be emailed to you before the session.",
         startISO: MASTERCLASS_DATE_ISO,
-        durationMinutes: 75,
+        durationMinutes: 90,
       });
       setIcsUrl(url);
       setRegistered(true);
@@ -195,448 +153,527 @@ export default function MasterclassPage() {
   }
 
   return (
-    <main className="bg-white text-[var(--text-primary)] overflow-x-hidden">
-      {/* Sticky top bar: logo + live countdown + CTA */}
-      <div className="fixed top-0 inset-x-0 z-50 glass-strong border-b border-black/[0.06]">
-        <div className="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between gap-3">
-          <Link href="/" className="font-display gradient-text-purple text-base md:text-lg tracking-[2px] uppercase font-semibold flex-shrink-0">
+    <main className="w-full bg-white text-gray-900 overflow-x-hidden">
+      {/* ── STICKY HEADER ── */}
+      <motion.div
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/50 shadow-sm"
+      >
+        <div className="max-w-full mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-6">
+          <Link href="/" className="font-bold text-lg sm:text-xl bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent flex-shrink-0">
             Captanova
           </Link>
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-            <span className="text-[10px] md:text-[11px] uppercase tracking-wider text-[var(--text-tertiary)] font-semibold whitespace-nowrap">
-              Starts In
-            </span>
+
+          <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-gradient-to-r from-red-50 to-orange-50 border border-red-200/50">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+            <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">In</span>
             <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
           </div>
+
           <button
             onClick={scrollToForm}
-            className="btn-gold text-[12px] md:text-sm py-2 px-4 md:px-6 flex-shrink-0"
+            className="bg-black hover:bg-gray-900 text-white text-xs sm:text-sm font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-all shadow-lg hover:shadow-xl flex-shrink-0"
           >
-            Reserve Seat
+            Reserve Now
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ── Hero ── */}
-      <section className="relative aurora-hero pt-32 pb-20 px-6 overflow-hidden">
-        <div className="glow-blob w-[500px] h-[500px] bg-blue-300/30 -top-40 -left-40" />
-        <div className="glow-blob w-[400px] h-[400px] bg-blue-300/25 top-20 -right-20" />
-        <div className="noise-overlay" />
+      {/* ── MOBILE HERO: HOST IMAGE FIRST ── */}
+      <section className="md:hidden w-full pt-20 pb-8 px-4 bg-gradient-to-b from-slate-50 via-white to-white min-h-screen flex flex-col items-center justify-center">
+        {/* Top decorative line */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
 
-        <div className="relative max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
-          <div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-xs"
+        >
+          {/* Main Image Card */}
+          <div className="relative mb-12">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-orange-400/20 rounded-3xl blur-2xl" />
+
+            <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
+              <Image
+                src="/mentors/renu-speaking-stage.jpg"
+                alt="Renu Sharma"
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            </div>
+
+            {/* Premium Badge - Repositioned for better mobile view */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 glass-strong rounded-full px-4 py-2 mb-6"
-            >
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[11px] uppercase tracking-[2px] font-bold text-[var(--accent-primary)]">
-                Free Live Masterclass · Limited Seats
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-display text-4xl md:text-6xl font-semibold leading-[1.08] mb-6"
-            >
-              Stop Overthinking.
-              <br />
-              <span className="gradient-text-purple italic">Start Living.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8 max-w-lg"
+              className="absolute -bottom-8 left-4 right-4 bg-gradient-to-r from-red-500 via-red-600 to-orange-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
             >
-              A free live session with Renu Sharma on breaking the overthinking cycle and building
-              real, lasting confidence — so you finally act on what you already know.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex items-center gap-3 mb-4 text-[var(--text-tertiary)] text-base"
-            >
-              <Calendar className="w-4 h-4 flex-shrink-0" />
-              <span>{dateLabel}</span>
-              <span className="text-[var(--text-muted)]">·</span>
-              <Clock className="w-4 h-4 flex-shrink-0" />
-              <span>{timeLabel} IST</span>
+              <p className="text-white font-black text-lg">Renu Sharma</p>
+              <p className="text-white/90 font-bold text-sm">Transformational Coach</p>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Zap className="w-3.5 h-3.5 text-white/80" fill="white" />
+                <span className="text-xs font-bold text-white/80">12+ Years • 3000+ Lives Changed</span>
+              </div>
             </motion.div>
+          </div>
 
+          {/* Content Below Image */}
+          <div className="pt-12 text-center">
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <p className="text-[10px] uppercase tracking-[2px] text-[var(--text-muted)] font-semibold mb-2.5">
-                Seats close in
+              <p className="text-red-600 text-xs font-black uppercase tracking-widest mb-4">
+                📅 {dateLabel} · {timeLabel}
               </p>
-              <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} className="mb-7" />
+
+              <h1 className="text-4xl font-black leading-tight text-gray-900 mb-4">
+                Stop Overthinking.
+                <br />
+                <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent italic">
+                  Start Living.
+                </span>
+              </h1>
+
+              <p className="text-gray-600 text-base leading-relaxed mb-8 font-medium">
+                A free live masterclass on breaking free from overthinking and building real, lasting confidence.
+              </p>
+
+              <div className="p-4 rounded-2xl bg-red-50 border-2 border-red-200 mb-8">
+                <p className="text-xs font-black text-gray-700 uppercase mb-2">⏰ Seats Closing In</p>
+                <div className="flex items-center justify-center gap-2">
+                  <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} />
+                </div>
+              </div>
 
               <button
                 onClick={scrollToForm}
-                className="group/hero btn-primary text-base py-4 px-8 w-full sm:w-auto"
+                className="w-full bg-black hover:bg-gray-900 text-white font-black text-lg py-4 px-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center gap-3 mb-3"
               >
                 Reserve My Free Seat
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/hero:translate-x-1" />
+                <ArrowRight className="w-5 h-5" />
               </button>
-              <p className="text-[var(--text-muted)] text-xs mt-3">
-                100% free · No card required · Takes 30 seconds
-              </p>
+
+              <p className="text-xs text-gray-500 font-bold">✓ 100% free · ✓ No card · ✓ 30 seconds</p>
             </motion.div>
           </div>
+        </motion.div>
+      </section>
 
-          {/* Host photo */}
-          <Reveal direction="right">
-            <div className="relative max-w-sm mx-auto lg:max-w-none">
-              <TiltCard intensity={7} className="rounded-[2.5rem] overflow-hidden aspect-[4/5] glass-card">
-                <Image
-                  src="/mentors/renu-speaking-stage.jpg"
-                  alt="Renu Sharma — host of the free masterclass"
-                  fill
-                  sizes="(max-width: 1024px) 90vw, 40vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/0 to-black/0" />
-<div className="absolute bottom-5 left-5 right-5 bg-gradient-to-r from-[var(--accent-gold)] to-amber-300 rounded-2xl px-5 py-4 shadow-lg">
-  <p className="text-black text-lg font-display font-semibold">Renu Sharma</p>
-  <p className="text-black/80 text-base font-medium">Founder &amp; Lead Coach, Captanova</p>
-</div>
-              </TiltCard>
-              <div className="absolute inset-0 bg-blue-200/15 rounded-[2.5rem] blur-3xl -z-10" />
+      {/* ── DESKTOP HERO ── */}
+      <section className="hidden md:block relative pt-32 pb-24 px-6 overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-red-200/40 to-transparent rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          {/* Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 bg-red-50 border-2 border-red-200 rounded-full px-5 py-3 mb-8">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-xs font-black uppercase tracking-wider text-red-600">Free Live Masterclass</span>
+            </div>
+
+            <h1 className="text-6xl lg:text-7xl font-black leading-[1.1] mb-8 text-gray-900">
+              Stop Overthinking.
+              <br />
+              <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent italic">
+                Start Living.
+              </span>
+            </h1>
+
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed font-medium max-w-xl">
+              Join Renu Sharma for a transformational masterclass on breaking the overthinking cycle and building lasting confidence.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200">
+                <Calendar className="w-5 h-5 text-red-600" />
+                <div>
+                  <p className="text-xs font-bold text-gray-600 uppercase">Date & Time</p>
+                  <p className="font-bold text-gray-900">{dateLabel}, {timeLabel} IST</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200">
+                <Users className="w-5 h-5 text-blue-600" />
+                <div>
+                  <p className="text-xs font-bold text-gray-600 uppercase">Format</p>
+                  <p className="font-bold text-gray-900">Live Online · 90 mins</p>
+                </div>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              onClick={scrollToForm}
+              className="bg-black hover:bg-gray-900 text-white text-lg font-black py-5 px-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all inline-flex items-center gap-3 mb-6"
+            >
+              Reserve My Free Seat
+              <ArrowRight className="w-6 h-6" />
+            </motion.button>
+
+            <p className="text-sm text-gray-600 font-bold">✓ Completely free · ✓ No credit card · ✓ 30 seconds to register</p>
+          </motion.div>
+
+          {/* Image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-orange-400/20 rounded-3xl blur-3xl" />
+
+            <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
+              <Image
+                src="/mentors/renu-speaking-stage.jpg"
+                alt="Renu Sharma"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 1024px) 90vw, 40vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="absolute bottom-6 left-6 right-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
+              >
+                <p className="text-white font-black text-lg">Renu Sharma</p>
+                <p className="text-white/90 font-bold text-sm">Transformational Coach & Founder</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <Award className="w-4 h-4 text-white" />
+                  <span className="text-xs font-bold text-white/90">12+ Years • 3000+ Transformations</span>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── WHAT YOU'LL LEARN ── */}
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-white via-slate-50 to-white">
+        <div className="max-w-7xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12 md:mb-16">
+              <p className="text-red-600 text-xs md:text-sm font-black uppercase tracking-widest mb-4">In This Masterclass</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-gray-900 mb-4">
+                4 Game-Changing Insights
+              </h2>
+              <p className="text-gray-600 text-base md:text-lg font-medium max-w-2xl mx-auto">
+                You'll leave with concrete frameworks you can use starting today.
+              </p>
             </div>
           </Reveal>
-        </div>
-      </section>
 
-      {/* ── What you'll learn ── */}
-      <section className="relative py-20 md:py-28 px-6">
-        <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[var(--accent-primary)] text-base tracking-[3px] uppercase font-bold mb-3">
-              In This Free Session
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold leading-tight">
-              You&apos;ll Walk Away Knowing How To
-            </h2>
-          </div>
-        </Reveal>
-
-        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {takeaways.map((t, i) => (
-            <Reveal key={t.title} delay={i * 0.1}>
-              <TiltCard intensity={9} className="glass-card rounded-3xl p-6 flex flex-col">
-                <div style={{ transform: "translateZ(24px)" }} className="mb-4">
-                  <IconOrb color={t.color} size={48} shape="2xl" delay={i * 0.15}>
-                    <t.icon className="w-5 h-5" strokeWidth={2} />
-                  </IconOrb>
-                </div>
-                <h3 className="text-[var(--text-primary)] font-semibold text-base mb-2">{t.title}</h3>
-                <p className="text-[var(--text-tertiary)] text-base leading-relaxed">{t.desc}</p>
-              </TiltCard>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Who it's for + host credibility ── */}
-      <section className="relative aurora-gold py-20 md:py-28 px-6 overflow-hidden">
-        <div className="glow-blob w-96 h-96 bg-sky-200/30 top-10 right-0" />
-        <div className="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-          <Reveal direction="left">
-            <TiltCard intensity={6} className="glass-card rounded-3xl p-8">
-              <div style={{ transform: "translateZ(20px)" }} className="mb-5">
-                <IconOrb color="var(--accent-royal)" size={44} shape="2xl" float={false}>
-                  <Users className="w-5 h-5" strokeWidth={2} />
-                </IconOrb>
-              </div>
-              <h3 className="text-[var(--text-primary)] font-display font-semibold text-xl mb-6">
-                This Masterclass Is For You If
-              </h3>
-              <ul className="space-y-3.5">
-                {forYou.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[var(--accent-royal)] mt-0.5 flex-shrink-0" strokeWidth={2} />
-                    <span className="text-[var(--text-secondary)] text-base">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </TiltCard>
-          </Reveal>
-
-          <Reveal direction="right">
-            <TiltCard intensity={6} className="glass-card rounded-3xl p-8">
-              <div style={{ transform: "translateZ(20px)" }} className="mb-5">
-                <IconOrb color="var(--accent-ink)" size={44} shape="2xl" float={false}>
-                  <ShieldCheck className="w-5 h-5" strokeWidth={2} />
-                </IconOrb>
-              </div>
-              <h3 className="text-[var(--text-primary)] font-display font-semibold text-xl mb-4">
-                Meet Your Host
-              </h3>
-              <p className="text-[var(--text-secondary)] text-base leading-relaxed mb-4">
-                Renu Sharma is the founder of Captanova Academy — The Academy for Mindset,
-                Communication &amp; Self-Leadership. She&apos;s helped hundreds of people move from
-                overthinking and self-doubt into clarity, confidence, and consistent action.
-              </p>
-              <p className="text-[var(--text-primary)] text-base leading-relaxed font-medium italic font-display">
-                &quot;My mission is simple: to help you become the captain of your life.&quot;
-              </p>
-            </TiltCard>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section className="relative py-20 md:py-28 px-6">
-        <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-[var(--accent-primary)] text-base tracking-[3px] uppercase font-bold mb-3">
-              Real Results
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-semibold leading-tight">
-              People Who&apos;ve Made The Shift
-            </h2>
-          </div>
-        </Reveal>
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-5">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.1}>
-              <TiltCard intensity={8} className="glass-card rounded-2xl p-6">
-                <p className="text-[var(--text-secondary)] text-base leading-relaxed italic mb-5">
-                  &quot;{t.quote}&quot;
-                </p>
-                <div className="flex items-center gap-3">
-                  <IconOrb color={t.color} size={38} shape="full" float={false}>
-                    <span className="font-bold text-[13px]">{t.initials}</span>
-                  </IconOrb>
-                  <div>
-                    <p className="text-[var(--text-primary)] text-base font-semibold">{t.name}</p>
-                    <p className="text-[var(--text-tertiary)] text-[11px]">{t.role}</p>
-                  </div>
-                </div>
-              </TiltCard>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section className="relative py-20 md:py-28 px-6 bg-[var(--bg-soft)]">
-        <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-semibold leading-tight">
-              Frequently Asked Questions
-            </h2>
-          </div>
-        </Reveal>
-        <div className="max-w-2xl mx-auto space-y-3">
-          {faqs.map((f, i) => (
-            <Reveal key={f.q} delay={i * 0.06}>
-              <div className="glass-card rounded-2xl overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {takeaways.map((item, i) => (
+              <Reveal key={item.title} delay={i * 0.1}>
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  className="group bg-white rounded-2xl p-6 sm:p-7 border-2 border-gray-200 hover:border-red-300 shadow-md hover:shadow-xl transition-all cursor-pointer"
                 >
-                  <span className="text-[var(--text-primary)] font-semibold text-base">{f.q}</span>
-                  <ChevronDown
-                    className={`w-5 h-5 text-[var(--text-tertiary)] flex-shrink-0 transition-transform duration-300 ${
-                      openFaq === i ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                <AnimatePresence initial={false}>
-                  {openFaq === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-6 pb-5 text-[var(--text-secondary)] text-base leading-relaxed">{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </Reveal>
-          ))}
+                  <div className="mb-6 inline-block p-3 rounded-xl bg-gradient-to-br from-red-100 to-orange-100 group-hover:from-red-200 group-hover:to-orange-200 transition-all">
+                    <item.icon className="w-6 h-6" style={{ color: item.color }} strokeWidth={2} />
+                  </div>
+                  <h3 className="text-gray-900 font-black text-lg sm:text-xl mb-3">{item.title}</h3>
+                  <p className="text-gray-600 text-base leading-relaxed">{item.desc}</p>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── Registration form ── */}
-      <section id="register" className="relative aurora-hero py-24 md:py-32 px-6 overflow-hidden scroll-mt-20">
-        <div className="glow-blob w-[450px] h-[450px] bg-blue-300/25 top-0 right-0" />
-        <div className="relative max-w-lg mx-auto">
+      {/* ── DYNAMIC HOST SECTION ── */}
+      <section className="w-full py-16 md:py-28 px-4 sm:px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-black text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Left Side - Stats & Story */}
+            <Reveal direction="left">
+              <div>
+                <p className="text-red-500 text-xs md:text-sm font-black uppercase tracking-widest mb-4">Meet Your Coach</p>
+                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
+                  Renu Sharma
+                </h2>
+
+                <div className="grid grid-cols-2 gap-6 mb-8 py-8 border-y border-white/20">
+                  {hostStats.map((stat, i) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <p className="text-4xl md:text-5xl font-black bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+                        {stat.value}
+                      </p>
+                      <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mt-2">{stat.label}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <p className="text-gray-300 text-lg leading-relaxed mb-6 font-medium">
+                  For over a decade, Renu has been helping high-achievers break free from overthinking and step into their power. She's directly coached thousands of individuals who wanted clarity, confidence, and the ability to actually take action on what they know.
+                </p>
+
+                <p className="text-white italic text-lg font-bold">
+                  &quot;My mission is simple: help you become the captain of your life, not a passenger.&quot;
+                </p>
+              </div>
+            </Reveal>
+
+            {/* Right Side - Image */}
+            <Reveal direction="right">
+              <motion.div whileHover={{ scale: 1.03 }} className="rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white/20">
+                <Image
+                  src="/mentors/renu-speaking-stage.jpg"
+                  alt="Renu Sharma"
+                  width={500}
+                  height={600}
+                  className="w-full h-auto object-cover"
+                />
+              </motion.div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHO IT'S FOR ── */}
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
           <Reveal>
-            <TiltCard intensity={4} className="glass-card rounded-[2rem] p-8 md:p-10">
+            <h2 className="text-3xl md:text-4xl font-black text-center mb-12 text-gray-900">
+              Is This Masterclass For You?
+            </h2>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            <Reveal direction="left">
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <CheckCircle2 className="w-7 h-7 text-red-600 flex-shrink-0" strokeWidth={2.5} />
+                  <h3 className="text-2xl font-black text-gray-900">Perfect If You:</h3>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    "Overthink decisions (big and small)",
+                    "Know what to do but struggle to act",
+                    "Want to feel more confident",
+                    "Are ready for real change, not just inspiration",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 mt-2 flex-shrink-0" />
+                      <span className="text-gray-700 font-medium text-base">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+
+            <Reveal direction="right">
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <Award className="w-7 h-7 text-blue-600 flex-shrink-0" strokeWidth={2.5} />
+                  <h3 className="text-2xl font-black text-gray-900">You'll Get:</h3>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    "90 minutes of live coaching",
+                    "Exclusive frameworks & strategies",
+                    "Live Q&A with Renu",
+                    "Lifetime replay access + resources",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
+                      <span className="text-gray-700 font-medium text-base">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ── REGISTRATION FORM ── */}
+      <section id="register" className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-slate-50 via-white to-slate-50 scroll-mt-24">
+        <div className="max-w-md mx-auto">
+          <Reveal>
+            <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-gray-200">
               <AnimatePresence mode="wait">
                 {registered ? (
                   <motion.div
                     key="success"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-4"
+                    className="text-center py-8"
                   >
-                    <div style={{ transform: "translateZ(20px)" }} className="mx-auto mb-5 w-fit">
-                      <IconOrb color="var(--accent-royal)" size={56} shape="full">
-                        <CheckCircle2 className="w-7 h-7" strokeWidth={2} />
-                      </IconOrb>
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-8 h-8 text-red-600" strokeWidth={2} />
                     </div>
-                    <h3 className="font-display text-2xl font-semibold text-[var(--text-primary)] mb-2">
-                      You&apos;re In, {form.name.split(" ")[0]}!
+
+                    <h3 className="text-3xl font-black text-gray-900 mb-3">
+                      You're In! 🎉
                     </h3>
-                    <p className="text-[var(--text-tertiary)] text-base leading-relaxed mb-6">
-                      Your seat is confirmed for {dateLabel} at {timeLabel} IST. We&apos;ve sent a
-                      confirmation to {form.email} — the live join link will follow closer to the date.
+
+                    <p className="text-gray-600 text-base leading-relaxed mb-8 font-medium">
+                      Your seat is reserved for <span className="font-bold">{dateLabel}</span> at <span className="font-bold">{timeLabel} IST</span>. Check your email for the confirmation.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-3">
+
+                    <div className="space-y-3">
                       {icsUrl && (
                         <a
                           href={icsUrl}
                           download="captanova-masterclass.ics"
-                          className="btn-outline flex-1 text-sm justify-center"
+                          className="w-full block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
                         >
-                          <Calendar className="w-4 h-4" />
-                          Add To Calendar
+                          📅 Add To Calendar
                         </a>
                       )}
                       <a
                         href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}?text=${encodeURIComponent(
-                          "Hi! I just registered for the free masterclass 🙌"
+                          "Hi! I just registered for the free masterclass 🎉"
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="btn-primary flex-1 text-sm justify-center"
+                        className="w-full block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
                       >
-                        Get Reminders On WhatsApp
+                        💬 Get Reminders on WhatsApp
                       </a>
                     </div>
                   </motion.div>
                 ) : (
                   <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <p className="text-[var(--accent-primary)] text-base tracking-[3px] uppercase font-bold mb-2 text-center">
-                      Reserve Your Free Seat
-                    </p>
-                    <h3 className="font-display text-2xl font-semibold text-[var(--text-primary)] mb-1 text-center">
-                      {dateLabel}
+                    <p className="text-red-600 text-xs font-black uppercase tracking-widest mb-2 text-center">Secure Your Spot</p>
+                    <h3 className="text-3xl font-black text-gray-900 text-center mb-8">
+                      Register Now
                     </h3>
-                    <p className="text-[var(--text-tertiary)] text-base text-center mb-7">
-                      {timeLabel} IST · Live Online · 100% Free
-                    </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-3">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                       <input
                         type="text"
                         placeholder="Full Name"
-                        aria-label="Full Name"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full bg-white/70 border border-black/[0.08] focus:border-[var(--accent-primary)]/40 focus:bg-white rounded-xl px-4 py-3 text-[var(--text-primary)] text-base placeholder-[var(--text-muted)] outline-none transition-all"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
+
                       <input
                         type="email"
                         placeholder="Email Address"
-                        aria-label="Email Address"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full bg-white/70 border border-black/[0.08] focus:border-[var(--accent-primary)]/40 focus:bg-white rounded-xl px-4 py-3 text-[var(--text-primary)] text-base placeholder-[var(--text-muted)] outline-none transition-all"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
+
                       <input
                         type="tel"
                         placeholder="Phone Number"
-                        aria-label="Phone Number"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full bg-white/70 border border-black/[0.08] focus:border-[var(--accent-primary)]/40 focus:bg-white rounded-xl px-4 py-3 text-[var(--text-primary)] text-base placeholder-[var(--text-muted)] outline-none transition-all"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
-                      <div className="grid grid-cols-2 gap-3">
-                        <input
-                          type="text"
-                          placeholder="City"
-                          aria-label="City"
-                          value={form.city}
-                          onChange={(e) => setForm({ ...form, city: e.target.value })}
-                          className="w-full bg-white/70 border border-black/[0.08] focus:border-[var(--accent-primary)]/40 focus:bg-white rounded-xl px-4 py-3 text-[var(--text-primary)] text-base placeholder-[var(--text-muted)] outline-none transition-all"
-                        />
-                        <select
-                          value={form.age}
-                          aria-label="Age Range"
-                          onChange={(e) => setForm({ ...form, age: e.target.value })}
-                          className="w-full bg-white/70 border border-black/[0.08] focus:border-[var(--accent-primary)]/40 focus:bg-white rounded-xl px-4 py-3 text-[var(--text-primary)] text-base outline-none transition-all appearance-none"
-                        >
-                          <option value="">Age Range</option>
-                          <option value="Under 18">Under 18</option>
-                          <option value="18-24">18–24</option>
-                          <option value="25-34">25–34</option>
-                          <option value="35-44">35–44</option>
-                          <option value="45-54">45–54</option>
-                          <option value="55+">55+</option>
-                        </select>
-                      </div>
 
-                      {error && <p className="text-[var(--accent-slate)] text-base">{error}</p>}
+                      <input
+                        type="text"
+                        placeholder="City"
+                        value={form.city}
+                        onChange={(e) => setForm({ ...form, city: e.target.value })}
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
+                      />
+
+                      <select
+                        value={form.age}
+                        onChange={(e) => setForm({ ...form, age: e.target.value })}
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base outline-none transition-all appearance-none font-medium"
+                      >
+                        <option value="">Select Age Range</option>
+                        <option value="Under 18">Under 18</option>
+                        <option value="18-24">18–24</option>
+                        <option value="25-34">25–34</option>
+                        <option value="35-44">35–44</option>
+                        <option value="45-54">45–54</option>
+                        <option value="55+">55+</option>
+                      </select>
+
+                      {error && <p className="text-red-600 text-sm font-bold text-center">{error}</p>}
 
                       <button
                         type="submit"
                         disabled={loading}
-                        className="btn-primary w-full justify-center text-base py-3.5 disabled:opacity-60"
+                        className="w-full bg-black hover:bg-gray-900 disabled:opacity-50 text-white font-black text-lg py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
                       >
-                        {loading ? "Reserving Your Seat…" : "Reserve My Free Seat"}
+                        {loading ? (
+                          <>
+                            <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            Reserving…
+                          </>
+                        ) : (
+                          <>
+                            Reserve My Free Seat
+                            <ArrowRight className="w-5 h-5" />
+                          </>
+                        )}
                       </button>
                     </form>
-                    <p className="text-[var(--text-muted)] text-xs mt-4 text-center">
-                      We respect your inbox — no spam, ever. Unsubscribe anytime.
+
+                    <p className="text-xs text-gray-500 mt-6 text-center font-bold">
+                      Your privacy is protected. We respect your inbox.
                     </p>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </TiltCard>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ── Minimal footer (scoped to this landing page — no cross-page anchor links) ── */}
-      <footer className="relative bg-white border-t border-black/[0.06] py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link href="/" className="font-display gradient-text-purple text-base tracking-[2px] uppercase font-semibold">
+      {/* ── FOOTER ── */}
+      <footer className="w-full bg-black text-white py-8 px-4 sm:px-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto text-center">
+          <Link href="/" className="font-bold text-xl mb-4 inline-block">
             Captanova
           </Link>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <p className="text-[var(--text-tertiary)] text-sm">
-              © {new Date().getFullYear()} Captanova Academy. All rights reserved.
-            </p>
-            <Link href="/privacy-policy" className="text-[var(--text-tertiary)] hover:text-[var(--accent-primary)] text-sm transition-colors">
-              Privacy Policy
+          <p className="text-gray-400 text-sm mb-6">Building confident, decisive leaders.</p>
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mb-8">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors font-medium">
+              Privacy
             </Link>
-            <Link href="/refund-policy" className="text-[var(--text-tertiary)] hover:text-[var(--accent-primary)] text-sm transition-colors">
-              Refund Policy
+            <span>•</span>
+            <Link href="/refund-policy" className="hover:text-white transition-colors font-medium">
+              Refunds
             </Link>
           </div>
-          <Link href="/" className="text-[var(--text-tertiary)] hover:text-[var(--accent-primary)] text-sm font-medium transition-colors">
-            ← Back to Captanova Academy
-          </Link>
+          <p className="text-gray-600 text-xs">
+            © {new Date().getFullYear()} Captanova Academy. All rights reserved.
+          </p>
         </div>
       </footer>
 
-      {/* ── Sticky mobile CTA bar ── */}
+      {/* ── MOBILE STICKY CTA ── */}
       {!registered && (
-        <div className="md:hidden fixed bottom-0 inset-x-0 z-50 glass-strong border-t border-black/[0.08] px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex flex-col">
-            <span className="text-[9px] uppercase tracking-wider text-[var(--text-tertiary)] font-semibold">Starts In</span>
+        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-gray-200 shadow-2xl px-4 py-3 flex items-center justify-between gap-3">
+          <div className="text-center flex-1">
+            <p className="text-xs font-bold text-gray-600 uppercase">Starts In</p>
             <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
           </div>
-          <button onClick={scrollToForm} className="btn-gold text-sm py-2.5 px-5 flex-shrink-0">
-            Reserve Seat
+          <button onClick={scrollToForm} className="bg-black hover:bg-gray-900 text-white text-sm font-black py-3 px-6 rounded-lg flex-shrink-0 shadow-lg">
+            Reserve
           </button>
         </div>
       )}
