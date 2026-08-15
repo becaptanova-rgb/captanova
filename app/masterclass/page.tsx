@@ -44,25 +44,25 @@ const timeLabel = dateObj.toLocaleTimeString("en-IN", {
 const takeaways = [
   {
     icon: Brain,
-    color: "#FF6B35",
+    color: "#7C3AED",
     title: "Rewire Your Mind",
     desc: "Break the overthinking cycle in 3 simple steps",
   },
   {
     icon: Compass,
-    color: "#6366F1",
+    color: "#A78BFA",
     title: "Find Clarity",
     desc: "Make decisions with confidence, not confusion",
   },
   {
     icon: Target,
-    color: "#06B6D4",
+    color: "#D4A574",
     title: "Take Action",
     desc: "Move from thinking to doing, starting today",
   },
   {
     icon: Sparkles,
-    color: "#F59E0B",
+    color: "#B8860B",
     title: "Build Momentum",
     desc: "Create lasting habits that stick",
   },
@@ -92,7 +92,6 @@ export default function MasterclassPage() {
   const [registered, setRegistered] = useState(false);
   const [icsUrl, setIcsUrl] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     trackViewContent({ content_name: "Free Masterclass Landing Page" });
@@ -158,22 +157,22 @@ export default function MasterclassPage() {
       <motion.div
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/50 shadow-sm"
+        className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-purple-200/30 shadow-sm"
       >
         <div className="max-w-full mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-6">
-          <Link href="/" className="font-bold text-lg sm:text-xl bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent flex-shrink-0">
+          <Link href="/" className="font-bold text-lg sm:text-xl bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent flex-shrink-0">
             Captanova
           </Link>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-gradient-to-r from-red-50 to-orange-50 border border-red-200/50">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+          <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-gradient-to-r from-purple-50 to-amber-50 border border-purple-200/50">
+            <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse flex-shrink-0" />
             <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">In</span>
             <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
           </div>
 
           <button
             onClick={scrollToForm}
-            className="bg-black hover:bg-gray-900 text-white text-xs sm:text-sm font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-all shadow-lg hover:shadow-xl flex-shrink-0"
+            className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-xs sm:text-sm font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-all shadow-lg hover:shadow-xl flex-shrink-0"
           >
             Reserve Now
           </button>
@@ -181,9 +180,9 @@ export default function MasterclassPage() {
       </motion.div>
 
       {/* ── MOBILE HERO: HOST IMAGE FIRST ── */}
-      <section className="md:hidden w-full pt-20 pb-8 px-4 bg-gradient-to-b from-slate-50 via-white to-white min-h-screen flex flex-col items-center justify-center">
+      <section className="md:hidden w-full pt-20 pb-8 px-4 bg-gradient-to-b from-purple-50 via-white to-white min-h-screen flex flex-col items-center justify-center">
         {/* Top decorative line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -193,7 +192,7 @@ export default function MasterclassPage() {
         >
           {/* Main Image Card */}
           <div className="relative mb-12">
-            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-orange-400/20 rounded-3xl blur-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-amber-400/20 rounded-3xl blur-2xl" />
 
             <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
               <Image
@@ -212,7 +211,7 @@ export default function MasterclassPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="absolute -bottom-8 left-4 right-4 bg-gradient-to-r from-red-500 via-red-600 to-orange-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
+              className="absolute -bottom-8 left-4 right-4 bg-gradient-to-r from-purple-700 via-purple-600 to-amber-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
             >
               <p className="text-white font-black text-lg">Renu Sharma</p>
               <p className="text-white/90 font-bold text-sm">Transformational Coach</p>
@@ -230,14 +229,14 @@ export default function MasterclassPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <p className="text-red-600 text-xs font-black uppercase tracking-widest mb-4">
+              <p className="text-purple-700 text-xs font-black uppercase tracking-widest mb-4">
                 📅 {dateLabel} · {timeLabel}
               </p>
 
               <h1 className="text-4xl font-black leading-tight text-gray-900 mb-4">
                 Stop Overthinking.
                 <br />
-                <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent italic">
+                <span className="bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent italic">
                   Start Living.
                 </span>
               </h1>
@@ -246,7 +245,7 @@ export default function MasterclassPage() {
                 A free live masterclass on breaking free from overthinking and building real, lasting confidence.
               </p>
 
-              <div className="p-4 rounded-2xl bg-red-50 border-2 border-red-200 mb-8">
+              <div className="p-4 rounded-2xl bg-purple-50 border-2 border-purple-200 mb-8">
                 <p className="text-xs font-black text-gray-700 uppercase mb-2">⏰ Seats Closing In</p>
                 <div className="flex items-center justify-center gap-2">
                   <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} />
@@ -255,7 +254,7 @@ export default function MasterclassPage() {
 
               <button
                 onClick={scrollToForm}
-                className="w-full bg-black hover:bg-gray-900 text-white font-black text-lg py-4 px-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center gap-3 mb-3"
+                className="w-full bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white font-black text-lg py-4 px-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center gap-3 mb-3"
               >
                 Reserve My Free Seat
                 <ArrowRight className="w-5 h-5" />
@@ -270,7 +269,7 @@ export default function MasterclassPage() {
       {/* ── DESKTOP HERO ── */}
       <section className="hidden md:block relative pt-32 pb-24 px-6 overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-red-200/40 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-purple-200/40 to-transparent rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
@@ -280,15 +279,15 @@ export default function MasterclassPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 bg-red-50 border-2 border-red-200 rounded-full px-5 py-3 mb-8">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-wider text-red-600">Free Live Masterclass</span>
+            <div className="inline-flex items-center gap-2 bg-purple-50 border-2 border-purple-200 rounded-full px-5 py-3 mb-8">
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse" />
+              <span className="text-xs font-black uppercase tracking-wider text-purple-700">Free Live Masterclass</span>
             </div>
 
             <h1 className="text-6xl lg:text-7xl font-black leading-[1.1] mb-8 text-gray-900">
               Stop Overthinking.
               <br />
-              <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent italic">
+              <span className="bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent italic">
                 Start Living.
               </span>
             </h1>
@@ -298,15 +297,15 @@ export default function MasterclassPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200">
-                <Calendar className="w-5 h-5 text-red-600" />
+              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-purple-50 to-amber-50 border-2 border-purple-200">
+                <Calendar className="w-5 h-5 text-purple-700" />
                 <div>
                   <p className="text-xs font-bold text-gray-600 uppercase">Date & Time</p>
                   <p className="font-bold text-gray-900">{dateLabel}, {timeLabel} IST</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200">
-                <Users className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-purple-50 to-amber-50 border-2 border-purple-200">
+                <Users className="w-5 h-5 text-purple-700" />
                 <div>
                   <p className="text-xs font-bold text-gray-600 uppercase">Format</p>
                   <p className="font-bold text-gray-900">Live Online · 90 mins</p>
@@ -317,7 +316,7 @@ export default function MasterclassPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               onClick={scrollToForm}
-              className="bg-black hover:bg-gray-900 text-white text-lg font-black py-5 px-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all inline-flex items-center gap-3 mb-6"
+              className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-lg font-black py-5 px-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all inline-flex items-center gap-3 mb-6"
             >
               Reserve My Free Seat
               <ArrowRight className="w-6 h-6" />
@@ -333,7 +332,7 @@ export default function MasterclassPage() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-red-400/30 to-orange-400/20 rounded-3xl blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-amber-400/20 rounded-3xl blur-3xl" />
 
             <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
               <Image
@@ -351,7 +350,7 @@ export default function MasterclassPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.3 }}
-                className="absolute bottom-6 left-6 right-6 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
+                className="absolute bottom-6 left-6 right-6 bg-gradient-to-r from-purple-700 to-amber-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
               >
                 <p className="text-white font-black text-lg">Renu Sharma</p>
                 <p className="text-white/90 font-bold text-sm">Transformational Coach & Founder</p>
@@ -366,11 +365,11 @@ export default function MasterclassPage() {
       </section>
 
       {/* ── WHAT YOU'LL LEARN ── */}
-      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-white via-slate-50 to-white">
+      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-white via-purple-50/30 to-white">
         <div className="max-w-7xl mx-auto">
           <Reveal>
             <div className="text-center mb-12 md:mb-16">
-              <p className="text-red-600 text-xs md:text-sm font-black uppercase tracking-widest mb-4">In This Masterclass</p>
+              <p className="text-purple-700 text-xs md:text-sm font-black uppercase tracking-widest mb-4">In This Masterclass</p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-gray-900 mb-4">
                 4 Game-Changing Insights
               </h2>
@@ -385,9 +384,9 @@ export default function MasterclassPage() {
               <Reveal key={item.title} delay={i * 0.1}>
                 <motion.div
                   whileHover={{ y: -8 }}
-                  className="group bg-white rounded-2xl p-6 sm:p-7 border-2 border-gray-200 hover:border-red-300 shadow-md hover:shadow-xl transition-all cursor-pointer"
+                  className="group bg-white rounded-2xl p-6 sm:p-7 border-2 border-gray-200 hover:border-purple-300 shadow-md hover:shadow-xl transition-all cursor-pointer"
                 >
-                  <div className="mb-6 inline-block p-3 rounded-xl bg-gradient-to-br from-red-100 to-orange-100 group-hover:from-red-200 group-hover:to-orange-200 transition-all">
+                  <div className="mb-6 inline-block p-3 rounded-xl bg-gradient-to-br from-purple-100 to-amber-100 group-hover:from-purple-200 group-hover:to-amber-200 transition-all">
                     <item.icon className="w-6 h-6" style={{ color: item.color }} strokeWidth={2} />
                   </div>
                   <h3 className="text-gray-900 font-black text-lg sm:text-xl mb-3">{item.title}</h3>
@@ -399,14 +398,14 @@ export default function MasterclassPage() {
         </div>
       </section>
 
-      {/* ── DYNAMIC HOST SECTION ── */}
+      {/* ── DYNAMIC HOST SECTION WITH DIFFERENT IMAGES ── */}
       <section className="w-full py-16 md:py-28 px-4 sm:px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-black text-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Left Side - Stats & Story */}
             <Reveal direction="left">
               <div>
-                <p className="text-red-500 text-xs md:text-sm font-black uppercase tracking-widest mb-4">Meet Your Coach</p>
+                <p className="text-purple-400 text-xs md:text-sm font-black uppercase tracking-widest mb-4">Meet Your Coach</p>
                 <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
                   Renu Sharma
                 </h2>
@@ -419,7 +418,7 @@ export default function MasterclassPage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <p className="text-4xl md:text-5xl font-black bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+                      <p className="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
                         {stat.value}
                       </p>
                       <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mt-2">{stat.label}</p>
@@ -437,17 +436,47 @@ export default function MasterclassPage() {
               </div>
             </Reveal>
 
-            {/* Right Side - Image */}
+            {/* Right Side - Different Image Gallery */}
             <Reveal direction="right">
-              <motion.div whileHover={{ scale: 1.03 }} className="rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white/20">
-                <Image
-                  src="/mentors/renu-speaking-stage.jpg"
-                  alt="Renu Sharma"
-                  width={500}
-                  height={600}
-                  className="w-full h-auto object-cover"
-                />
-              </motion.div>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Main large image - Coach Portrait */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="col-span-2 rounded-3xl overflow-hidden ring-4 ring-white/20 shadow-2xl"
+                >
+                  <Image
+                    src="/mentors/renu-portrait.jpg"
+                    alt="Renu Sharma - Professional Coach Portrait"
+                    width={900}
+                    height={800}
+                    priority
+                    className="w-full h-auto object-contain"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </motion.div>
+
+                {/* Bottom left - accent card */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="rounded-2xl overflow-hidden ring-4 ring-white/20 shadow-xl h-48 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center"
+                >
+                  <div className="text-center">
+                    <Award className="w-12 h-12 text-white/80 mx-auto mb-2" />
+                    <p className="text-white font-bold text-sm">Certified Coach</p>
+                  </div>
+                </motion.div>
+
+                {/* Bottom right - accent card */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="rounded-2xl overflow-hidden ring-4 ring-white/20 shadow-xl h-48 bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center"
+                >
+                  <div className="text-center">
+                    <Users className="w-12 h-12 text-white/80 mx-auto mb-2" />
+                    <p className="text-white font-bold text-sm">3000+ Lives</p>
+                  </div>
+                </motion.div>
+              </div>
             </Reveal>
           </div>
         </div>
@@ -464,9 +493,9 @@ export default function MasterclassPage() {
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             <Reveal direction="left">
-              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 border-2 border-purple-200">
                 <div className="flex items-center gap-3 mb-6">
-                  <CheckCircle2 className="w-7 h-7 text-red-600 flex-shrink-0" strokeWidth={2.5} />
+                  <CheckCircle2 className="w-7 h-7 text-purple-700 flex-shrink-0" strokeWidth={2.5} />
                   <h3 className="text-2xl font-black text-gray-900">Perfect If You:</h3>
                 </div>
                 <ul className="space-y-4">
@@ -477,7 +506,7 @@ export default function MasterclassPage() {
                     "Are ready for real change, not just inspiration",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 mt-2 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-700 mt-2 flex-shrink-0" />
                       <span className="text-gray-700 font-medium text-base">{item}</span>
                     </li>
                   ))}
@@ -486,9 +515,9 @@ export default function MasterclassPage() {
             </Reveal>
 
             <Reveal direction="right">
-              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200">
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-8 border-2 border-amber-200">
                 <div className="flex items-center gap-3 mb-6">
-                  <Award className="w-7 h-7 text-blue-600 flex-shrink-0" strokeWidth={2.5} />
+                  <Award className="w-7 h-7 text-amber-700 flex-shrink-0" strokeWidth={2.5} />
                   <h3 className="text-2xl font-black text-gray-900">You'll Get:</h3>
                 </div>
                 <ul className="space-y-4">
@@ -499,7 +528,7 @@ export default function MasterclassPage() {
                     "Lifetime replay access + resources",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-700 mt-2 flex-shrink-0" />
                       <span className="text-gray-700 font-medium text-base">{item}</span>
                     </li>
                   ))}
@@ -511,10 +540,10 @@ export default function MasterclassPage() {
       </section>
 
       {/* ── REGISTRATION FORM ── */}
-      <section id="register" className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-slate-50 via-white to-slate-50 scroll-mt-24">
+      <section id="register" className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-purple-50 via-white to-purple-50 scroll-mt-24">
         <div className="max-w-md mx-auto">
           <Reveal>
-            <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-gray-200">
+            <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-purple-200">
               <AnimatePresence mode="wait">
                 {registered ? (
                   <motion.div
@@ -523,8 +552,8 @@ export default function MasterclassPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-center py-8"
                   >
-                    <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-8 h-8 text-red-600" strokeWidth={2} />
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 className="w-8 h-8 text-purple-700" strokeWidth={2} />
                     </div>
 
                     <h3 className="text-3xl font-black text-gray-900 mb-3">
@@ -540,7 +569,7 @@ export default function MasterclassPage() {
                         <a
                           href={icsUrl}
                           download="captanova-masterclass.ics"
-                          className="w-full block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
+                          className="w-full block bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
                         >
                           📅 Add To Calendar
                         </a>
@@ -559,7 +588,7 @@ export default function MasterclassPage() {
                   </motion.div>
                 ) : (
                   <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <p className="text-red-600 text-xs font-black uppercase tracking-widest mb-2 text-center">Secure Your Spot</p>
+                    <p className="text-purple-700 text-xs font-black uppercase tracking-widest mb-2 text-center">Secure Your Spot</p>
                     <h3 className="text-3xl font-black text-gray-900 text-center mb-8">
                       Register Now
                     </h3>
@@ -570,7 +599,7 @@ export default function MasterclassPage() {
                         placeholder="Full Name"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
 
                       <input
@@ -578,7 +607,7 @@ export default function MasterclassPage() {
                         placeholder="Email Address"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
 
                       <input
@@ -586,7 +615,7 @@ export default function MasterclassPage() {
                         placeholder="Phone Number"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
 
                       <input
@@ -594,13 +623,13 @@ export default function MasterclassPage() {
                         placeholder="City"
                         value={form.city}
                         onChange={(e) => setForm({ ...form, city: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
                       />
 
                       <select
                         value={form.age}
                         onChange={(e) => setForm({ ...form, age: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-red-300 focus:border-red-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base outline-none transition-all appearance-none font-medium"
+                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base outline-none transition-all appearance-none font-medium"
                       >
                         <option value="">Select Age Range</option>
                         <option value="Under 18">Under 18</option>
@@ -616,7 +645,7 @@ export default function MasterclassPage() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-black hover:bg-gray-900 disabled:opacity-50 text-white font-black text-lg py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
+                        className="w-full bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 disabled:opacity-50 text-white font-black text-lg py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
                       >
                         {loading ? (
                           <>
@@ -646,7 +675,7 @@ export default function MasterclassPage() {
       {/* ── FOOTER ── */}
       <footer className="w-full bg-black text-white py-8 px-4 sm:px-6 border-t border-white/10">
         <div className="max-w-7xl mx-auto text-center">
-          <Link href="/" className="font-bold text-xl mb-4 inline-block">
+          <Link href="/" className="font-bold text-xl mb-4 inline-block bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent">
             Captanova
           </Link>
           <p className="text-gray-400 text-sm mb-6">Building confident, decisive leaders.</p>
@@ -667,12 +696,12 @@ export default function MasterclassPage() {
 
       {/* ── MOBILE STICKY CTA ── */}
       {!registered && (
-        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-gray-200 shadow-2xl px-4 py-3 flex items-center justify-between gap-3">
+        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-purple-200 shadow-2xl px-4 py-3 flex items-center justify-between gap-3">
           <div className="text-center flex-1">
             <p className="text-xs font-bold text-gray-600 uppercase">Starts In</p>
             <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
           </div>
-          <button onClick={scrollToForm} className="bg-black hover:bg-gray-900 text-white text-sm font-black py-3 px-6 rounded-lg flex-shrink-0 shadow-lg">
+          <button onClick={scrollToForm} className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-sm font-black py-3 px-6 rounded-lg flex-shrink-0 shadow-lg">
             Reserve
           </button>
         </div>

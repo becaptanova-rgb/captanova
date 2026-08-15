@@ -109,7 +109,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\REAL ENTERPRICE\\Downloads\\captanova-main-fixed\\captanova-main",
+    "outputFileTracingRoot": "C:\\Users\\REAL ENTERPRICE\\Downloads",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -309,12 +309,12 @@ self.__SERVER_FILES_MANIFEST={
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "C:\\Users\\REAL ENTERPRICE\\Downloads\\captanova-main-fixed\\captanova-main"
+      "root": "C:\\Users\\REAL ENTERPRICE\\Downloads"
     },
     "distDirRoot": ".next"
   },
   "appDir": "C:\\Users\\REAL ENTERPRICE\\Downloads\\captanova-main-fixed\\captanova-main",
-  "relativeAppDir": "",
+  "relativeAppDir": "captanova-main-fixed\\captanova-main",
   "files": [
     ".next\\package.json",
     ".next\\routes-manifest.json",
