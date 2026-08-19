@@ -1,3 +1,0 @@
-module.exports=[18642,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(966);a.n(d("[project]/captanova-main-fixed/captanova-main/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},87626,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(966);a.n(d("[project]/captanova-main-fixed/captanova-main/node_modules/next/dist/client/components/builtin/global-error.js"))},23331,a=>{"use strict";a.i(18642);var b=a.i(87626);a.n(b)},69030,a=>{a.n(a.i(23331))}];
-
-//# sourceMappingURL=0ue8_next_dist_client_components_builtin_global-error_1xlg4-9.js.map

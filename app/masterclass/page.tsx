@@ -1,32 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Brain,
-  Compass,
-  Target,
-  Users,
-  ShieldCheck,
-  Calendar,
   Clock,
-  ChevronDown,
   ArrowRight,
   Sparkles,
   CheckCircle2,
-  Award,
-  Zap,
-  Play,
+  Check,
+  Plus,
+  Eye,
+  RefreshCw,
+  Brain,
+  Compass,
+  Footprints,
+  X,
 } from "lucide-react";
-import Reveal from "@/components/ui/Reveal";
-import TiltCard from "@/components/ui/TiltCard";
-import IconOrb from "@/components/ui/IconOrb";
-import CountdownTimer from "@/components/ui/CountdownTimer";
 import { MASTERCLASS_DATE_ISO } from "@/lib/data";
-import { buildICSDownloadUrl } from "@/lib/utils";
 import { trackLead, trackViewContent } from "@/lib/analytics";
+import styles from "./masterclass-premium.module.css";
 
 const dateObj = new Date(MASTERCLASS_DATE_ISO);
 const dateLabel = dateObj.toLocaleDateString("en-IN", {
@@ -41,82 +34,119 @@ const timeLabel = dateObj.toLocaleTimeString("en-IN", {
   timeZone: "Asia/Kolkata",
 });
 
-const takeaways = [
-  {
-    icon: Brain,
-    color: "#7C3AED",
-    title: "Rewire Your Mind",
-    desc: "Break the overthinking cycle in 3 simple steps",
-  },
-  {
-    icon: Compass,
-    color: "#A78BFA",
-    title: "Find Clarity",
-    desc: "Make decisions with confidence, not confusion",
-  },
-  {
-    icon: Target,
-    color: "#D4A574",
-    title: "Take Action",
-    desc: "Move from thinking to doing, starting today",
-  },
-  {
-    icon: Sparkles,
-    color: "#B8860B",
-    title: "Build Momentum",
-    desc: "Create lasting habits that stick",
-  },
-];
-
-const hostStats = [
-  { label: "Years Coaching", value: "12+", icon: Award },
-  { label: "Lives Changed", value: "3000+", icon: Users },
-  { label: "Success Rate", value: "94%", icon: CheckCircle2 },
-  { label: "Rating", value: "4.9★", icon: Sparkles },
-];
-
 interface FormState {
-  name: string;
-  email: string;
+  firstName: string;
   phone: string;
-  city: string;
-  age: string;
+  email: string;
 }
 
-const initialForm: FormState = { name: "", email: "", phone: "", city: "", age: "" };
+const initialForm: FormState = { firstName: "", phone: "", email: "" };
+
+const CYCLE_STEPS = ["Think", "Doubt", "Analyse", "Delay", "Regret", "Think Again"];
+const APPROACH_STEPS = ["Awareness", "Clarity", "Choice", "Action"];
+
+const DISCOVER_ITEMS = [
+  {
+    number: "01",
+    title: "Why You Overthink",
+    description:
+      "Understand what is happening beneath the constant mental noise and why your mind keeps returning to the same questions.",
+  },
+  {
+    number: "02",
+    title: "Why Knowing Isn't Always Enough",
+    description: "You can know exactly what you should do and still struggle to act. Discover why.",
+  },
+  {
+    number: "03",
+    title: "The Difference Between Thought and Awareness",
+    description:
+      "Learn how to notice your thoughts without automatically allowing them to make your decisions for you.",
+  },
+  {
+    number: "04",
+    title: "How Awareness Creates Clarity",
+    description:
+      "Discover why thinking harder isn't always the answer — and how awareness can help you see what is actually happening.",
+  },
+  {
+    number: "05",
+    title: "How to Make Conscious Choices",
+    description: "You don't need complete certainty to make a meaningful decision. Learn how to create space between thought and response.",
+  },
+  {
+    number: "06",
+    title: "How to Start Moving Forward",
+    description: "Turn awareness into clarity. Clarity into choice. And choice into action.",
+  },
+];
+
+const WALK_AWAY_ITEMS = [
+  "Why your mind keeps going in circles.",
+  "Why certain patterns keep repeating.",
+  "Why knowing what to do isn't always enough.",
+  "Why you keep waiting for certainty.",
+  "How awareness can create space for a different response.",
+  "What your next conscious step could be.",
+];
+
+const FOR_YOU_IF_ITEMS = [
+  "You overthink even simple decisions.",
+  "You constantly question yourself.",
+  "You replay conversations long after they've happened.",
+  "You worry about the future before it arrives.",
+  "You know what you want but keep postponing action.",
+  "You feel stuck even though you are trying to move forward.",
+  "You are tired of being mentally busy but emotionally disconnected from your life.",
+  "You want more clarity and less mental noise.",
+  "You want to understand yourself instead of constantly fighting yourself.",
+  "You are ready to stop merely thinking about your life and start consciously living it.",
+];
+
+const FAQ_ITEMS = [
+  { q: "Is the masterclass really free?", a: "Yes. The masterclass is completely free to attend." },
+  { q: "How long is it?", a: "The live masterclass is approximately 60 minutes." },
+  { q: "Do I need any previous experience?", a: "No. You don't need any previous coaching or personal-development experience." },
+  {
+    q: "Is this therapy?",
+    a: "No. This is a personal-development coaching masterclass focused on awareness, clarity and conscious action. It is not therapy or medical treatment.",
+  },
+  {
+    q: "What if I already know a lot about personal development?",
+    a: "That's okay. The masterclass isn't about how much information you know. It's about how clearly you can see yourself and the patterns influencing your choices.",
+  },
+  { q: "Is the masterclass live?", a: "Yes. It is a live online masterclass with Coach Renu Sharma." },
+  { q: "What happens after I register?", a: "You'll receive the masterclass access details by email." },
+  {
+    q: "Will I be offered a Captanova program?",
+    a: "At the end of the masterclass, you'll have the opportunity to learn more about how you can continue your journey with Captanova if you choose. There is no obligation.",
+  },
+];
 
 export default function MasterclassPage() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [registered, setRegistered] = useState(false);
-  const [icsUrl, setIcsUrl] = useState<string | null>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
     trackViewContent({ content_name: "Free Masterclass Landing Page" });
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (icsUrl) URL.revokeObjectURL(icsUrl);
-    };
-  }, [icsUrl]);
-
-  function scrollToForm() {
-    document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim() || !form.city.trim() || !form.age) {
-      setError("Please fill in every field so we can confirm your seat.");
+    if (!form.firstName.trim() || !form.phone.trim() || !form.email.trim()) {
+      setError("Please fill in all fields.");
       return;
     }
     if (!/^\S+@\S+\.\S+$/.test(form.email)) {
       setError("Please enter a valid email address.");
+      return;
+    }
+    if (form.phone.trim().replace(/[^0-9]/g, "").length < 8) {
+      setError("Please enter a valid phone number.");
       return;
     }
 
@@ -126,7 +156,9 @@ export default function MasterclassPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
+          name: form.firstName,
+          phone: form.phone,
+          email: form.email,
           type: "masterclass",
           source: "masterclass-landing",
         }),
@@ -134,578 +166,517 @@ export default function MasterclassPage() {
       if (!res.ok) throw new Error("Registration failed");
 
       trackLead({ content_name: "Free Masterclass" });
-
-      const url = buildICSDownloadUrl({
-        title: "Free Masterclass: Stop Overthinking, Start Living — Captanova",
-        description:
-          "Live masterclass with Renu Sharma. Join link will be emailed to you before the session.",
-        startISO: MASTERCLASS_DATE_ISO,
-        durationMinutes: 90,
-      });
-      setIcsUrl(url);
       setRegistered(true);
+      setForm(initialForm);
     } catch {
-      setError("Something went wrong — please try again in a moment.");
+      setError("Something went wrong — please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  return (
-    <main className="w-full bg-white text-gray-900 overflow-x-hidden">
-      {/* ── STICKY HEADER ── */}
-      <motion.div
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-purple-200/30 shadow-sm"
-      >
-        <div className="max-w-full mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-6">
-          <Link href="/" className="font-bold text-lg sm:text-xl bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent flex-shrink-0">
-            Captanova
-          </Link>
+  function RegistrationCard({ idPrefix, heading, ctaLabel }: { idPrefix: string; heading: string; ctaLabel: string }) {
+    return (
+      <div className={styles.registrationContainer}>
+        <p className={styles.registrationEyebrow}>Save Your Seat</p>
+        <h2 className={styles.registrationTitle}>{heading}</h2>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-gradient-to-r from-purple-50 to-amber-50 border border-purple-200/50">
-            <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse flex-shrink-0" />
-            <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">In</span>
-            <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
-          </div>
-
-          <button
-            onClick={scrollToForm}
-            className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-xs sm:text-sm font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-all shadow-lg hover:shadow-xl flex-shrink-0"
-          >
-            Reserve Now
-          </button>
-        </div>
-      </motion.div>
-
-      {/* ── MOBILE HERO: HOST IMAGE FIRST ── */}
-      <section className="md:hidden w-full pt-20 pb-8 px-4 bg-gradient-to-b from-purple-50 via-white to-white min-h-screen flex flex-col items-center justify-center">
-        {/* Top decorative line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-xs"
-        >
-          {/* Main Image Card */}
-          <div className="relative mb-12">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-amber-400/20 rounded-3xl blur-2xl" />
-
-            <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
-              <Image
-                src="/mentors/renu-speaking-stage.jpg"
-                alt="Renu Sharma"
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            </div>
-
-            {/* Premium Badge - Repositioned for better mobile view */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="absolute -bottom-8 left-4 right-4 bg-gradient-to-r from-purple-700 via-purple-600 to-amber-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
-            >
-              <p className="text-white font-black text-lg">Renu Sharma</p>
-              <p className="text-white/90 font-bold text-sm">Transformational Coach</p>
-              <div className="flex items-center gap-2 mt-1.5">
-                <Zap className="w-3.5 h-3.5 text-white/80" fill="white" />
-                <span className="text-xs font-bold text-white/80">12+ Years • 3000+ Lives Changed</span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Content Below Image */}
-          <div className="pt-12 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <p className="text-purple-700 text-xs font-black uppercase tracking-widest mb-4">
-                📅 {dateLabel} · {timeLabel}
-              </p>
-
-              <h1 className="text-4xl font-black leading-tight text-gray-900 mb-4">
-                Stop Overthinking.
-                <br />
-                <span className="bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent italic">
-                  Start Living.
-                </span>
-              </h1>
-
-              <p className="text-gray-600 text-base leading-relaxed mb-8 font-medium">
-                A free live masterclass on breaking free from overthinking and building real, lasting confidence.
-              </p>
-
-              <div className="p-4 rounded-2xl bg-purple-50 border-2 border-purple-200 mb-8">
-                <p className="text-xs font-black text-gray-700 uppercase mb-2">⏰ Seats Closing In</p>
-                <div className="flex items-center justify-center gap-2">
-                  <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} />
-                </div>
-              </div>
-
-              <button
-                onClick={scrollToForm}
-                className="w-full bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white font-black text-lg py-4 px-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all flex items-center justify-center gap-3 mb-3"
-              >
-                Reserve My Free Seat
-                <ArrowRight className="w-5 h-5" />
-              </button>
-
-              <p className="text-xs text-gray-500 font-bold">✓ 100% free · ✓ No card · ✓ 30 seconds</p>
-            </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ── DESKTOP HERO ── */}
-      <section className="hidden md:block relative pt-32 pb-24 px-6 overflow-hidden min-h-screen flex items-center">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-purple-200/40 to-transparent rounded-full blur-3xl" />
+        <div className={styles.eventChips}>
+          <span className={styles.eventChip}>📅 {dateLabel}</span>
+          <span className={styles.eventChip}>⏰ {timeLabel} IST</span>
+          <span className={styles.eventChip}>💻 Live Online</span>
+          <span className={styles.eventChip}>⏱ 60 Minutes</span>
+          <span className={styles.eventChip}>🎟 100% Free</span>
         </div>
 
-        <div className="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-purple-50 border-2 border-purple-200 rounded-full px-5 py-3 mb-8">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-wider text-purple-700">Free Live Masterclass</span>
+        {registered ? (
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className={styles.successMessage}>
+            <div className={styles.successIcon}>
+              <CheckCircle2 className={styles.successIconSvg} />
             </div>
-
-            <h1 className="text-6xl lg:text-7xl font-black leading-[1.1] mb-8 text-gray-900">
-              Stop Overthinking.
-              <br />
-              <span className="bg-gradient-to-r from-purple-700 to-purple-600 bg-clip-text text-transparent italic">
-                Start Living.
-              </span>
-            </h1>
-
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed font-medium max-w-xl">
-              Join Renu Sharma for a transformational masterclass on breaking the overthinking cycle and building lasting confidence.
+            <h3 className={styles.successTitle}>You're All Set! 🎉</h3>
+            <p className={styles.successText}>
+              Your spot is secured. Check your email for confirmation details and the link to join.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-purple-50 to-amber-50 border-2 border-purple-200">
-                <Calendar className="w-5 h-5 text-purple-700" />
-                <div>
-                  <p className="text-xs font-bold text-gray-600 uppercase">Date & Time</p>
-                  <p className="font-bold text-gray-900">{dateLabel}, {timeLabel} IST</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-gradient-to-r from-purple-50 to-amber-50 border-2 border-purple-200">
-                <Users className="w-5 h-5 text-purple-700" />
-                <div>
-                  <p className="text-xs font-bold text-gray-600 uppercase">Format</p>
-                  <p className="font-bold text-gray-900">Live Online · 90 mins</p>
-                </div>
-              </div>
+          </motion.div>
+        ) : (
+          <form onSubmit={handleSubmit} className={styles.registrationForm}>
+            <div className={styles.formGroup}>
+              <label htmlFor={`${idPrefix}-firstName`} className={styles.formLabel}>First Name</label>
+              <input
+                id={`${idPrefix}-firstName`}
+                type="text"
+                placeholder="Enter your first name"
+                value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                className={styles.formInput}
+                required
+              />
             </div>
+            <div className={styles.formGroup}>
+              <label htmlFor={`${idPrefix}-phone`} className={styles.formLabel}>Phone Number</label>
+              <input
+                id={`${idPrefix}-phone`}
+                type="tel"
+                placeholder="Enter your phone number"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className={styles.formInput}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor={`${idPrefix}-email`} className={styles.formLabel}>Email Address</label>
+              <input
+                id={`${idPrefix}-email`}
+                type="email"
+                placeholder="Enter your email address"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className={styles.formInput}
+                required
+              />
+            </div>
+
+            {error && <p className={styles.formError}>{error}</p>}
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              onClick={scrollToForm}
-              className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-lg font-black py-5 px-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all inline-flex items-center gap-3 mb-6"
+              type="submit"
+              disabled={loading}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={styles.submitButton}
             >
-              Reserve My Free Seat
-              <ArrowRight className="w-6 h-6" />
+              {loading ? (
+                <>
+                  <span className={styles.loadingSpinner} />
+                  Reserving your seat...
+                </>
+              ) : (
+                <>
+                  {ctaLabel}
+                  <ArrowRight className={styles.submitIcon} />
+                </>
+              )}
             </motion.button>
 
-            <p className="text-sm text-gray-600 font-bold">✓ Completely free · ✓ No credit card · ✓ 30 seconds to register</p>
+            <p className={styles.formNote}>Your masterclass access details will be sent to your email after registration.</p>
+          </form>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <main className={styles.main}>
+      {/* ── STICKY HEADER ── */}
+      <motion.header initial={{ y: -100 }} animate={{ y: 0 }} className={styles.stickyHeader}>
+        <div className={styles.stickyContent}>
+          <div className={styles.stickyLeft}>
+            <h2 className={styles.stickyTitle}>Free Masterclass</h2>
+            <p className={styles.stickyMeta}>
+              <Clock className={styles.stickyIcon} />
+              {dateLabel} • {timeLabel}
+            </p>
+          </div>
+          <a href="#register" className={styles.stickyCtaButton}>
+            Reserve Now
+            <ArrowRight className={styles.stickyCtaIcon} />
+          </a>
+        </div>
+      </motion.header>
+
+      {/* ── HERO ── */}
+      <section className={styles.heroSection}>
+        <p className={styles.brandMark}>CAPTANOVA</p>
+
+        <div className={styles.heroContainer}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className={styles.heroContent}>
+            <div className={styles.premiumBadge}>
+              <Sparkles className={styles.badgeIcon} />
+              <span>Free Live Masterclass with Coach Renu Sharma</span>
+            </div>
+
+            <h1 className={styles.heroHeadline}>
+              Stop Overthinking.<br />
+              <span className={styles.heroAccent}>Start Living.</span>
+            </h1>
+
+            <p className={styles.heroLead}>You know what you want. So why do you keep getting stuck in your own head?</p>
+
+            <div className={styles.bubbleStack}>
+              <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You think about the decision.</p>
+              <p className={`${styles.bubble} ${styles.bubbleRight}`}>Then you question it.</p>
+              <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You replay the conversation.</p>
+              <p className={`${styles.bubble} ${styles.bubbleRight}`}>You imagine what could go wrong.</p>
+              <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You know what you should do... but somehow, you still don&apos;t do it.</p>
+            </div>
+
+            <p className={styles.heroClosing}>
+              What if the problem isn&apos;t that you don&apos;t know enough? What if you&apos;re simply not seeing what&apos;s really driving you?
+            </p>
+
+            <p className={styles.heroClosing}>
+              Join <strong>Coach Renu Sharma</strong>, Founder of Captanova, for a powerful 60-minute masterclass on overthinking, awareness, clarity and conscious choice.
+            </p>
+
+            <motion.a href="#register-top" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={styles.primaryCtaButton}>
+              Reserve My Free Seat
+              <ArrowRight className={styles.ctaIcon} />
+            </motion.a>
           </motion.div>
 
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-amber-400/20 rounded-3xl blur-3xl" />
-
-            <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl ring-8 ring-white">
-              <Image
-                src="/mentors/renu-speaking-stage.jpg"
-                alt="Renu Sharma"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1024px) 90vw, 40vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
-                className="absolute bottom-6 left-6 right-6 bg-gradient-to-r from-purple-700 to-amber-500 rounded-2xl px-6 py-4 shadow-2xl border-4 border-white"
-              >
-                <p className="text-white font-black text-lg">Renu Sharma</p>
-                <p className="text-white/90 font-bold text-sm">Transformational Coach & Founder</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Award className="w-4 h-4 text-white" />
-                  <span className="text-xs font-bold text-white/90">12+ Years • 3000+ Transformations</span>
-                </div>
-              </motion.div>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className={styles.heroImage}>
+            <div className={styles.heroImageWrapper}>
+              <Image src="/mentors/renu-speaking-stage.jpg" alt="Coach Renu Sharma" fill priority className={styles.heroImageTag} />
+              <div className={styles.heroImageOverlay} />
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── WHAT YOU'LL LEARN ── */}
-      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-white via-purple-50/30 to-white">
-        <div className="max-w-7xl mx-auto">
-          <Reveal>
-            <div className="text-center mb-12 md:mb-16">
-              <p className="text-purple-700 text-xs md:text-sm font-black uppercase tracking-widest mb-4">In This Masterclass</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-gray-900 mb-4">
-                4 Game-Changing Insights
-              </h2>
-              <p className="text-gray-600 text-base md:text-lg font-medium max-w-2xl mx-auto">
-                You'll leave with concrete frameworks you can use starting today.
-              </p>
-            </div>
-          </Reveal>
+      {/* ── EARLY REGISTRATION: SAVE YOUR SEAT ── */}
+      <section id="register-top" className={styles.registrationSection}>
+        <RegistrationCard idPrefix="top" heading="Stop Overthinking. Start Living." ctaLabel="Yes — Reserve My Free Seat" />
+      </section>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {takeaways.map((item, i) => (
-              <Reveal key={item.title} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -8 }}
-                  className="group bg-white rounded-2xl p-6 sm:p-7 border-2 border-gray-200 hover:border-purple-300 shadow-md hover:shadow-xl transition-all cursor-pointer"
-                >
-                  <div className="mb-6 inline-block p-3 rounded-xl bg-gradient-to-br from-purple-100 to-amber-100 group-hover:from-purple-200 group-hover:to-amber-200 transition-all">
-                    <item.icon className="w-6 h-6" style={{ color: item.color }} strokeWidth={2} />
-                  </div>
-                  <h3 className="text-gray-900 font-black text-lg sm:text-xl mb-3">{item.title}</h3>
-                  <p className="text-gray-600 text-base leading-relaxed">{item.desc}</p>
-                </motion.div>
-              </Reveal>
+      {/* ── MAYBE THIS IS YOU ── */}
+      <section className={styles.narrativeSection}>
+        <div className={styles.narrativeContainer}>
+          <p className={styles.sectionEyebrow}>A Familiar Pattern</p>
+          <h2 className={styles.sectionHeadline}>Maybe This Is You.</h2>
+          <div className={styles.bubbleStack}>
+            <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You wake up already thinking about everything that needs to be done.</p>
+            <p className={`${styles.bubble} ${styles.bubbleRight}`}>You make a decision... and then question whether it was the right one.</p>
+            <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You have a conversation... and replay it in your head later.</p>
+            <p className={`${styles.bubble} ${styles.bubbleRight}`}>You want to make a change... but keep waiting for the right moment.</p>
+            <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You want clarity... so you think harder.</p>
+            <p className={`${styles.bubble} ${styles.bubbleRight}`}>But the more you think... <strong>the more confused you become.</strong></p>
+          </div>
+
+          <div className={styles.narrativeQuoteList}>
+            <p>&ldquo;What if I make the wrong decision?&rdquo;</p>
+            <p>&ldquo;What will people think?&rdquo;</p>
+            <p>&ldquo;Maybe I should wait.&rdquo;</p>
+            <p>&ldquo;I&apos;ll start when things settle down.&rdquo;</p>
+            <p>&ldquo;I just need to figure things out first.&rdquo;</p>
+          </div>
+
+          <p className={styles.narrativeEmphasis}>&ldquo;Why can&apos;t I just switch my mind off?&rdquo;</p>
+          <div className={styles.narrativeBody} style={{ marginTop: "1.5rem" }}>
+            <p>If you&apos;ve experienced this, you&apos;re not alone. And you&apos;re not broken.</p>
+            <p><strong>You may simply be caught in a pattern your mind has learned.</strong></p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHEN THINKING STOPS HELPING ── */}
+      <section className={`${styles.narrativeSection} ${styles.altBg}`}>
+        <div className={styles.narrativeContainer}>
+          <p className={styles.sectionEyebrow}>The Pattern</p>
+          <h2 className={styles.sectionHeadline}>When Thinking Stops Helping</h2>
+          <div className={styles.narrativeBody}>
+            <p>Your mind is designed to think. To remember. To predict. To protect. To look for answers.</p>
+            <p>But there is a point where useful thinking becomes <strong>overthinking</strong>. And the cycle can look like this:</p>
+          </div>
+
+          <div className={styles.cycleFlow}>
+            {CYCLE_STEPS.map((step, i) => (
+              <span key={step} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span className={styles.cycleChip}>{step}</span>
+                {i < CYCLE_STEPS.length - 1 && <span className={styles.cycleArrow}>→</span>}
+              </span>
+            ))}
+          </div>
+
+          <div className={styles.narrativeBody}>
+            <p>You don&apos;t move forward because you are waiting to feel certain.</p>
+            <p>But life rarely gives us certainty first.</p>
+          </div>
+          <p className={styles.narrativeEmphasis}>
+            Sometimes clarity doesn&apos;t come from thinking more.<br />It comes from becoming more aware.
+          </p>
+        </div>
+      </section>
+
+      {/* ── WHAT IF YOU COULD SEE YOURSELF MORE CLEARLY ── */}
+      <section className={styles.narrativeSection}>
+        <div className={styles.narrativeContainer}>
+          <p className={styles.sectionEyebrow}>A Different Way</p>
+          <h2 className={styles.sectionHeadline}>What If You Could See Yourself More Clearly?</h2>
+
+          <div className={styles.mosaicGrid}>
+            {[
+              { icon: Eye, color: "#7c3aed", text: "Imagine noticing a thought without automatically believing it." },
+              { icon: RefreshCw, color: "#d97706", text: "Recognising a pattern without automatically repeating it." },
+              { icon: Brain, color: "#a855f7", text: "Understanding why you react the way you do." },
+              { icon: Compass, color: "#b45309", text: "Making a decision without needing every possible outcome guaranteed." },
+              { icon: Footprints, color: "#6d28d9", text: "Taking your next step without having your entire future figured out." },
+            ].map(({ icon: Icon, color, text }) => (
+              <motion.div key={text} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className={styles.mosaicCard}>
+                <span className={styles.mosaicIcon} style={{ backgroundColor: color }}>
+                  <Icon size={20} />
+                </span>
+                <span>{text}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          <p className={styles.narrativeEmphasis}>That&apos;s the shift we&apos;re exploring in this masterclass.</p>
+
+          <div className={styles.pillWrap}>
+            <span className={styles.pillItem}><X className={styles.pillIcon} /> Control every thought</span>
+            <span className={styles.pillItem}><X className={styles.pillIcon} /> Eliminate fear</span>
+            <span className={styles.pillItem}><X className={styles.pillIcon} /> Have all the answers</span>
+          </div>
+          <p className={styles.narrativeEmphasis}>You need enough awareness to create a conscious choice.</p>
+        </div>
+      </section>
+
+      {/* ── MEET YOUR COACH ── */}
+      <section className={styles.coachSection}>
+        <div className={styles.coachContainer}>
+          <div className={styles.coachGrid}>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className={styles.coachImageWrapper}>
+              <div className={styles.coachImageContainer}>
+                <Image src="/mentors/renu-portrait.jpg" alt="Renu Sharma" fill className={styles.coachImageTag} />
+              </div>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className={styles.coachInfo}>
+              <p className={styles.coachLabel}>Meet Your Coach</p>
+              <h2 className={styles.coachName}>Renu Sharma</h2>
+              <p className={styles.coachTitle}>Coach | Founder of Captanova — Be the Captain of Your Life</p>
+
+              <p className={styles.coachBio}>
+                Renu Sharma is a coach and the founder of Captanova — a personal-development platform built around
+                awareness, clarity, conscious choice and personal leadership. Her work comes from a simple belief:
+              </p>
+              <p className={styles.coachBelief}>You cannot consciously change what you have not become aware of.</p>
+              <p className={styles.coachBio}>
+                Renu&apos;s approach is not about telling people how they should live. It is about helping them
+                understand themselves more clearly so they can make better choices for themselves.
+              </p>
+              <p className={styles.coachBio}>
+                After years of working with people and navigating her own journey of growth, change and rebuilding,
+                Renu created Captanova around one central question:
+              </p>
+              <p className={styles.coachBelief}>What would change if you stopped living on autopilot and started consciously leading your life?</p>
+
+              <div className={styles.coachQuote}>
+                &ldquo;I don&apos;t want to tell you how to live your life. I want to help you become aware enough to lead it yourself.&rdquo;
+                <div className={styles.coachSignature}>— Renu Sharma</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── IN THIS FREE MASTERCLASS, YOU'LL DISCOVER ── */}
+      <section className={styles.discoverSection}>
+        <div className={styles.discoverHeader}>
+          <p className={styles.sectionEyebrow} style={{ textAlign: "center" }}>What You&apos;ll Learn</p>
+          <h2 className={styles.sectionHeadline} style={{ textAlign: "center" }}>In This Free Masterclass, You&apos;ll Discover</h2>
+        </div>
+        <div className={styles.discoverGrid}>
+          {DISCOVER_ITEMS.map((item) => (
+            <motion.div key={item.number} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className={styles.discoverCard}>
+              <div className={styles.discoverNumber}>{item.number}</div>
+              <h3 className={styles.discoverTitle}>{item.title}</h3>
+              <p className={styles.discoverDescription}>{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── WHAT WILL YOU WALK AWAY WITH ── */}
+      <section className={`${styles.checklistSection} ${styles.altBg}`}>
+        <div className={styles.checklistContainer}>
+          <p className={styles.sectionEyebrow}>The Outcome</p>
+          <h2 className={styles.sectionHeadline}>What Will You Walk Away With?</h2>
+          <div className={styles.narrativeBody}>
+            <p>By the end of the masterclass, you won&apos;t have your entire life figured out. And that&apos;s not the goal.</p>
+            <p>You will have something more useful: <strong>a different way of seeing yourself.</strong></p>
+            <p>You may begin to understand:</p>
+          </div>
+          <div className={styles.checklistGrid}>
+            {WALK_AWAY_ITEMS.map((item) => (
+              <div key={item} className={styles.checklistItem}>
+                <Check className={styles.checklistIcon} />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+          <p className={styles.checklistClosing}>
+            Because you don&apos;t need to know the entire road. You need to see the next step clearly enough to take it.
+          </p>
+        </div>
+      </section>
+
+      {/* ── THIS MASTERCLASS IS FOR YOU IF... ── */}
+      <section className={styles.checklistSection}>
+        <div className={styles.checklistContainer}>
+          <p className={styles.sectionEyebrow}>Is This You?</p>
+          <h2 className={styles.sectionHeadline}>This Masterclass Is for You If...</h2>
+          <div className={styles.checklistGrid}>
+            {FOR_YOU_IF_ITEMS.map((item) => (
+              <div key={item} className={styles.checklistItem}>
+                <Check className={styles.checklistIcon} />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+          <p className={styles.checklistClosing}>If you recognised yourself here, this masterclass was created for you.</p>
+        </div>
+      </section>
+
+      {/* ── THIS IS NOT ABOUT FIXING YOU ── */}
+      <section className={`${styles.narrativeSection} ${styles.altBg}`}>
+        <div className={styles.narrativeContainer}>
+          <h2 className={styles.sectionHeadline}>This Is Not About Fixing You.</h2>
+          <div className={styles.narrativeBody}>
+            <p><strong>You don&apos;t need to be fixed.</strong></p>
+            <p>You need to understand yourself.</p>
+            <p>Because the more clearly you see your thoughts, your patterns, your fears, your choices, the more freedom you have to decide what comes next.</p>
+            <p>You don&apos;t have to transform your entire life tomorrow.</p>
+          </div>
+          <p className={styles.narrativeEmphasis}>You can begin with one conscious choice.</p>
+        </div>
+      </section>
+
+      {/* ── THE CAPTANOVA APPROACH ── */}
+      <section className={styles.narrativeSection}>
+        <div className={styles.narrativeContainer}>
+          <p className={styles.sectionEyebrow}>The Captanova Approach</p>
+          <h2 className={styles.sectionHeadline}>Awareness → Clarity → Choice → Action</h2>
+
+          <div className={styles.approachFlow}>
+            {APPROACH_STEPS.map((step, i) => (
+              <span key={step} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <span className={styles.approachChip}>{step}</span>
+                {i < APPROACH_STEPS.length - 1 && <span className={styles.approachArrow}>→</span>}
+              </span>
+            ))}
+          </div>
+
+          <div className={styles.narrativeBody}>
+            <p>Awareness helps you see. Clarity helps you understand. Choice gives you direction. Action moves you forward.</p>
+            <p>And when conscious choices are repeated... they begin to shape your identity and your life.</p>
+            <p>That&apos;s the beginning of becoming:</p>
+          </div>
+
+          <p className={styles.captainStatement}>The Captain of Your Life.</p>
+        </div>
+      </section>
+
+      {/* ── READY TO TAKE YOUR FIRST STEP (soft CTA) ── */}
+      <section className={styles.softCtaSection}>
+        <div className={styles.softCtaContainer}>
+          <h2 className={styles.sectionHeadline} style={{ color: "white" }}>Ready to Take Your First Step?</h2>
+          <div className={styles.softCtaBody}>
+            <p>You can keep thinking about it.</p>
+            <p>You can wait until the timing feels perfect.</p>
+            <p>You can wait until you&apos;re more certain.</p>
+            <p className={styles.softCtaEmphasis}>Or you can simply give yourself one hour.</p>
+            <p>One hour to step out of the noise.</p>
+            <p>One hour to understand your patterns.</p>
+            <p>One hour to see your life from a different perspective.</p>
+          </div>
+          <p className={styles.softCtaEmphasis} style={{ marginBottom: "2rem" }}>
+            One hour could change the way you see what comes next.
+          </p>
+          <motion.a href="#register" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={styles.secondaryCtaButton}>
+            Reserve My Free Seat
+            <ArrowRight className={styles.ctaIcon} />
+          </motion.a>
+        </div>
+      </section>
+
+      {/* ── BOTTOM REGISTRATION: RESERVE YOUR FREE SEAT ── */}
+      <section id="register" className={styles.registrationSection}>
+        <RegistrationCard idPrefix="bottom" heading="Reserve Your Free Seat" ctaLabel="Yes — Save My Free Seat" />
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className={styles.faqSection}>
+        <div className={styles.faqContainer}>
+          <div className={styles.faqHeader}>
+            <p className={styles.sectionEyebrow} style={{ textAlign: "center" }}>Questions</p>
+            <h2 className={styles.sectionHeadline} style={{ textAlign: "center" }}>Frequently Asked Questions</h2>
+          </div>
+          <div className={styles.faqList}>
+            {FAQ_ITEMS.map((item) => (
+              <details key={item.q} className={styles.faqItem}>
+                <summary className={styles.faqQuestion}>
+                  {item.q}
+                  <Plus className={styles.faqQuestionIcon} />
+                </summary>
+                <p className={styles.faqAnswer}>{item.a}</p>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── DYNAMIC HOST SECTION WITH DIFFERENT IMAGES ── */}
-      <section className="w-full py-16 md:py-28 px-4 sm:px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-black text-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left Side - Stats & Story */}
-            <Reveal direction="left">
-              <div>
-                <p className="text-purple-400 text-xs md:text-sm font-black uppercase tracking-widest mb-4">Meet Your Coach</p>
-                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-                  Renu Sharma
-                </h2>
-
-                <div className="grid grid-cols-2 gap-6 mb-8 py-8 border-y border-white/20">
-                  {hostStats.map((stat, i) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                    >
-                      <p className="text-4xl md:text-5xl font-black bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
-                        {stat.value}
-                      </p>
-                      <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mt-2">{stat.label}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <p className="text-gray-300 text-lg leading-relaxed mb-6 font-medium">
-                  For over a decade, Renu has been helping high-achievers break free from overthinking and step into their power. She's directly coached thousands of individuals who wanted clarity, confidence, and the ability to actually take action on what they know.
-                </p>
-
-                <p className="text-white italic text-lg font-bold">
-                  &quot;My mission is simple: help you become the captain of your life, not a passenger.&quot;
-                </p>
-              </div>
-            </Reveal>
-
-            {/* Right Side - Different Image Gallery */}
-            <Reveal direction="right">
-              <div className="grid grid-cols-2 gap-4">
-                {/* Main large image - Coach Portrait */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="col-span-2 rounded-3xl overflow-hidden ring-4 ring-white/20 shadow-2xl"
-                >
-                  <Image
-                    src="/mentors/renu-portrait.jpg"
-                    alt="Renu Sharma - Professional Coach Portrait"
-                    width={900}
-                    height={800}
-                    priority
-                    className="w-full h-auto object-contain"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </motion.div>
-
-                {/* Bottom left - accent card */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="rounded-2xl overflow-hidden ring-4 ring-white/20 shadow-xl h-48 bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <Award className="w-12 h-12 text-white/80 mx-auto mb-2" />
-                    <p className="text-white font-bold text-sm">Certified Coach</p>
-                  </div>
-                </motion.div>
-
-                {/* Bottom right - accent card */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="rounded-2xl overflow-hidden ring-4 ring-white/20 shadow-xl h-48 bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <Users className="w-12 h-12 text-white/80 mx-auto mb-2" />
-                    <p className="text-white font-bold text-sm">3000+ Lives</p>
-                  </div>
-                </motion.div>
-              </div>
-            </Reveal>
+      {/* ── YOUR LIFE IS HAPPENING NOW (final CTA) ── */}
+      <section className={styles.finalSection}>
+        <div className={styles.finalContainer}>
+          <h2 className={styles.sectionHeadline} style={{ color: "white" }}>Your Life Is Happening Now.</h2>
+          <div className={styles.finalBody}>
+            <p>Not when you finally have the perfect plan.</p>
+            <p>Not when everyone understands your choices.</p>
+            <p>Not when you have every answer.</p>
+            <p>Not when you&apos;re no longer afraid.</p>
           </div>
-        </div>
-      </section>
+          <p className={styles.finalWord}>NOW.</p>
+          <p className={styles.finalQuestion}>
+            Are you going to keep watching your life from the passenger seat?<br />
+            Or are you ready to take the captain&apos;s seat?
+          </p>
+          <h3 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "2rem" }}>Stop Overthinking. Start Living.</h3>
 
-      {/* ── WHO IT'S FOR ── */}
-      <section className="w-full py-16 md:py-24 px-4 sm:px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <Reveal>
-            <h2 className="text-3xl md:text-4xl font-black text-center mb-12 text-gray-900">
-              Is This Masterclass For You?
-            </h2>
-          </Reveal>
+          <motion.a href="#register" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={styles.primaryCtaButton} style={{ margin: "0 auto" }}>
+            Reserve My Free Seat
+            <ArrowRight className={styles.ctaIcon} />
+          </motion.a>
 
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            <Reveal direction="left">
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 border-2 border-purple-200">
-                <div className="flex items-center gap-3 mb-6">
-                  <CheckCircle2 className="w-7 h-7 text-purple-700 flex-shrink-0" strokeWidth={2.5} />
-                  <h3 className="text-2xl font-black text-gray-900">Perfect If You:</h3>
-                </div>
-                <ul className="space-y-4">
-                  {[
-                    "Overthink decisions (big and small)",
-                    "Know what to do but struggle to act",
-                    "Want to feel more confident",
-                    "Are ready for real change, not just inspiration",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-700 mt-2 flex-shrink-0" />
-                      <span className="text-gray-700 font-medium text-base">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-
-            <Reveal direction="right">
-              <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-8 border-2 border-amber-200">
-                <div className="flex items-center gap-3 mb-6">
-                  <Award className="w-7 h-7 text-amber-700 flex-shrink-0" strokeWidth={2.5} />
-                  <h3 className="text-2xl font-black text-gray-900">You'll Get:</h3>
-                </div>
-                <ul className="space-y-4">
-                  {[
-                    "90 minutes of live coaching",
-                    "Exclusive frameworks & strategies",
-                    "Live Q&A with Renu",
-                    "Lifetime replay access + resources",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-700 mt-2 flex-shrink-0" />
-                      <span className="text-gray-700 font-medium text-base">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
+          <div className={styles.finalMeta}>
+            <span>📅 {dateLabel}</span>
+            <span>⏰ {timeLabel}</span>
+            <span>💻 Online</span>
+            <span>⏱ 60 Minutes</span>
           </div>
-        </div>
-      </section>
-
-      {/* ── REGISTRATION FORM ── */}
-      <section id="register" className="w-full py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-purple-50 via-white to-purple-50 scroll-mt-24">
-        <div className="max-w-md mx-auto">
-          <Reveal>
-            <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-purple-200">
-              <AnimatePresence mode="wait">
-                {registered ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-8"
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-8 h-8 text-purple-700" strokeWidth={2} />
-                    </div>
-
-                    <h3 className="text-3xl font-black text-gray-900 mb-3">
-                      You're In! 🎉
-                    </h3>
-
-                    <p className="text-gray-600 text-base leading-relaxed mb-8 font-medium">
-                      Your seat is reserved for <span className="font-bold">{dateLabel}</span> at <span className="font-bold">{timeLabel} IST</span>. Check your email for the confirmation.
-                    </p>
-
-                    <div className="space-y-3">
-                      {icsUrl && (
-                        <a
-                          href={icsUrl}
-                          download="captanova-masterclass.ics"
-                          className="w-full block bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
-                        >
-                          📅 Add To Calendar
-                        </a>
-                      )}
-                      <a
-                        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}?text=${encodeURIComponent(
-                          "Hi! I just registered for the free masterclass 🎉"
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-all text-center"
-                      >
-                        💬 Get Reminders on WhatsApp
-                      </a>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <p className="text-purple-700 text-xs font-black uppercase tracking-widest mb-2 text-center">Secure Your Spot</p>
-                    <h3 className="text-3xl font-black text-gray-900 text-center mb-8">
-                      Register Now
-                    </h3>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <input
-                        type="text"
-                        placeholder="Full Name"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
-                      />
-
-                      <input
-                        type="email"
-                        placeholder="Email Address"
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
-                      />
-
-                      <input
-                        type="tel"
-                        placeholder="Phone Number"
-                        value={form.phone}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
-                      />
-
-                      <input
-                        type="text"
-                        placeholder="City"
-                        value={form.city}
-                        onChange={(e) => setForm({ ...form, city: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base placeholder-gray-500 outline-none transition-all font-medium"
-                      />
-
-                      <select
-                        value={form.age}
-                        onChange={(e) => setForm({ ...form, age: e.target.value })}
-                        className="w-full bg-gray-50 border-2 border-gray-300 hover:border-purple-300 focus:border-purple-500 focus:bg-white rounded-xl px-4 py-3.5 text-gray-900 text-base outline-none transition-all appearance-none font-medium"
-                      >
-                        <option value="">Select Age Range</option>
-                        <option value="Under 18">Under 18</option>
-                        <option value="18-24">18–24</option>
-                        <option value="25-34">25–34</option>
-                        <option value="35-44">35–44</option>
-                        <option value="45-54">45–54</option>
-                        <option value="55+">55+</option>
-                      </select>
-
-                      {error && <p className="text-red-600 text-sm font-bold text-center">{error}</p>}
-
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 disabled:opacity-50 text-white font-black text-lg py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2"
-                      >
-                        {loading ? (
-                          <>
-                            <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            Reserving…
-                          </>
-                        ) : (
-                          <>
-                            Reserve My Free Seat
-                            <ArrowRight className="w-5 h-5" />
-                          </>
-                        )}
-                      </button>
-                    </form>
-
-                    <p className="text-xs text-gray-500 mt-6 text-center font-bold">
-                      Your privacy is protected. We respect your inbox.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </Reveal>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="w-full bg-black text-white py-8 px-4 sm:px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto text-center">
-          <Link href="/" className="font-bold text-xl mb-4 inline-block bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent">
-            Captanova
-          </Link>
-          <p className="text-gray-400 text-sm mb-6">Building confident, decisive leaders.</p>
-          <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mb-8">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors font-medium">
-              Privacy
-            </Link>
-            <span>•</span>
-            <Link href="/refund-policy" className="hover:text-white transition-colors font-medium">
-              Refunds
-            </Link>
+      <footer className={styles.footer}>
+        <div className={styles.footerContainer}>
+          <p className={styles.footerBrand}>CAPTANOVA ♾️</p>
+          <p className={styles.footerTagline}>BE THE CAPTAIN OF YOUR LIFE.</p>
+          <p className={styles.footerSignature}>Coach Renu Sharma — Founder, Captanova</p>
+
+          <div className={styles.footerWhySection}>
+            <p className={styles.footerWhyTitle}>Why Captanova?</p>
+            <div className={styles.footerWhyGrid}>
+              <div className={styles.footerWhyItem}>
+                <strong>CAPTAIN</strong>
+                <p>You take responsibility for the direction of your life.</p>
+              </div>
+              <div className={styles.footerWhyItem}>
+                <strong>NOVA</strong>
+                <p>A new beginning. A new light. A new way of seeing.</p>
+              </div>
+            </div>
+            <p className={styles.footerCombined}>Together: Captanova — Be the Captain of Your Life.</p>
           </div>
-          <p className="text-gray-600 text-xs">
-            © {new Date().getFullYear()} Captanova Academy. All rights reserved.
+
+          <p className={styles.footerLocation}>
+            — Renu Sharma, Coach | Founder, Captanova<br />
+            Copenhagen, Denmark | Indian Roots | Global Vision
           </p>
         </div>
       </footer>
-
-      {/* ── MOBILE STICKY CTA ── */}
-      {!registered && (
-        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-purple-200 shadow-2xl px-4 py-3 flex items-center justify-between gap-3">
-          <div className="text-center flex-1">
-            <p className="text-xs font-bold text-gray-600 uppercase">Starts In</p>
-            <CountdownTimer targetDate={MASTERCLASS_DATE_ISO} compact />
-          </div>
-          <button onClick={scrollToForm} className="bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-800 hover:to-purple-700 text-white text-sm font-black py-3 px-6 rounded-lg flex-shrink-0 shadow-lg">
-            Reserve
-          </button>
-        </div>
-      )}
     </main>
   );
 }

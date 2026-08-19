@@ -17,7 +17,7 @@ export const AMAZON_KDP_URL =
  * (IST = +05:30) so the countdown resolves correctly for every visitor
  * regardless of their local timezone.
  *
- * Example for 15 Aug 2026, 7:00 PM IST:
+ * Example for 30th August 2026, 7:00 PM IST:
  *   "2026-08-15T19:00:00+05:30"
  */
 export const MASTERCLASS_DATE_ISO = "2026-08-15T19:00:00+05:30";
