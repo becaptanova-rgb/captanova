@@ -123,6 +123,116 @@ const FAQ_ITEMS = [
   },
 ];
 
+// Top-level component (NOT nested inside MasterclassPage). This matters:
+// a component function defined inside another component's body gets a new
+// function identity on every re-render, which makes React unmount and
+// remount its DOM on every keystroke — that's what was causing the input
+// cursor to lose focus after each character. Defining it here, with all
+// state passed in as props, fixes that.
+interface RegistrationCardProps {
+  idPrefix: string;
+  heading: string;
+  ctaLabel: string;
+  form: FormState;
+  setForm: (form: FormState) => void;
+  error: string;
+  loading: boolean;
+  registered: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+function RegistrationCard({ idPrefix, heading, ctaLabel, form, setForm, error, loading, registered, onSubmit }: RegistrationCardProps) {
+  return (
+    <div className={styles.registrationContainer}>
+      <p className={styles.registrationEyebrow}>Save Your Seat</p>
+      <h2 className={styles.registrationTitle}>{heading}</h2>
+
+      <div className={styles.eventChips}>
+        <span className={styles.eventChip}>📅 {dateLabel}</span>
+        <span className={styles.eventChip}>⏰ {timeLabel} IST</span>
+        <span className={styles.eventChip}>💻 Live Online</span>
+        <span className={styles.eventChip}>⏱ 60 Minutes</span>
+        <span className={styles.eventChip}>🎟 100% Free</span>
+      </div>
+
+      {registered ? (
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className={styles.successMessage}>
+          <div className={styles.successIcon}>
+            <CheckCircle2 className={styles.successIconSvg} />
+          </div>
+          <h3 className={styles.successTitle}>You're All Set! 🎉</h3>
+          <p className={styles.successText}>
+            Your spot is secured. Check your email for confirmation details and the link to join.
+          </p>
+        </motion.div>
+      ) : (
+        <form onSubmit={onSubmit} className={styles.registrationForm}>
+          <div className={styles.formGroup}>
+            <label htmlFor={`${idPrefix}-firstName`} className={styles.formLabel}>First Name</label>
+            <input
+              id={`${idPrefix}-firstName`}
+              type="text"
+              placeholder="Enter your first name"
+              value={form.firstName}
+              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+              className={styles.formInput}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor={`${idPrefix}-phone`} className={styles.formLabel}>Phone Number</label>
+            <input
+              id={`${idPrefix}-phone`}
+              type="tel"
+              placeholder="Enter your phone number"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              className={styles.formInput}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor={`${idPrefix}-email`} className={styles.formLabel}>Email Address</label>
+            <input
+              id={`${idPrefix}-email`}
+              type="email"
+              placeholder="Enter your email address"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className={styles.formInput}
+              required
+            />
+          </div>
+
+          {error && <p className={styles.formError}>{error}</p>}
+
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={styles.submitButton}
+          >
+            {loading ? (
+              <>
+                <span className={styles.loadingSpinner} />
+                Reserving your seat...
+              </>
+            ) : (
+              <>
+                {ctaLabel}
+                <ArrowRight className={styles.submitIcon} />
+              </>
+            )}
+          </motion.button>
+
+          <p className={styles.formNote}>Your masterclass access details will be sent to your email after registration.</p>
+        </form>
+      )}
+    </div>
+  );
+}
+
 export default function MasterclassPage() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [loading, setLoading] = useState(false);
@@ -173,98 +283,6 @@ export default function MasterclassPage() {
     } finally {
       setLoading(false);
     }
-  }
-
-  function RegistrationCard({ idPrefix, heading, ctaLabel }: { idPrefix: string; heading: string; ctaLabel: string }) {
-    return (
-      <div className={styles.registrationContainer}>
-        <p className={styles.registrationEyebrow}>Save Your Seat</p>
-        <h2 className={styles.registrationTitle}>{heading}</h2>
-
-        <div className={styles.eventChips}>
-          <span className={styles.eventChip}>📅 {dateLabel}</span>
-          <span className={styles.eventChip}>⏰ {timeLabel} IST</span>
-          <span className={styles.eventChip}>💻 Live Online</span>
-          <span className={styles.eventChip}>⏱ 60 Minutes</span>
-          <span className={styles.eventChip}>🎟 100% Free</span>
-        </div>
-
-        {registered ? (
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className={styles.successMessage}>
-            <div className={styles.successIcon}>
-              <CheckCircle2 className={styles.successIconSvg} />
-            </div>
-            <h3 className={styles.successTitle}>You're All Set! 🎉</h3>
-            <p className={styles.successText}>
-              Your spot is secured. Check your email for confirmation details and the link to join.
-            </p>
-          </motion.div>
-        ) : (
-          <form onSubmit={handleSubmit} className={styles.registrationForm}>
-            <div className={styles.formGroup}>
-              <label htmlFor={`${idPrefix}-firstName`} className={styles.formLabel}>First Name</label>
-              <input
-                id={`${idPrefix}-firstName`}
-                type="text"
-                placeholder="Enter your first name"
-                value={form.firstName}
-                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                className={styles.formInput}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor={`${idPrefix}-phone`} className={styles.formLabel}>Phone Number</label>
-              <input
-                id={`${idPrefix}-phone`}
-                type="tel"
-                placeholder="Enter your phone number"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className={styles.formInput}
-                required
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor={`${idPrefix}-email`} className={styles.formLabel}>Email Address</label>
-              <input
-                id={`${idPrefix}-email`}
-                type="email"
-                placeholder="Enter your email address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className={styles.formInput}
-                required
-              />
-            </div>
-
-            {error && <p className={styles.formError}>{error}</p>}
-
-            <motion.button
-              type="submit"
-              disabled={loading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={styles.submitButton}
-            >
-              {loading ? (
-                <>
-                  <span className={styles.loadingSpinner} />
-                  Reserving your seat...
-                </>
-              ) : (
-                <>
-                  {ctaLabel}
-                  <ArrowRight className={styles.submitIcon} />
-                </>
-              )}
-            </motion.button>
-
-            <p className={styles.formNote}>Your masterclass access details will be sent to your email after registration.</p>
-          </form>
-        )}
-      </div>
-    );
   }
 
   return (
@@ -337,7 +355,17 @@ export default function MasterclassPage() {
 
       {/* ── EARLY REGISTRATION: SAVE YOUR SEAT ── */}
       <section id="register-top" className={styles.registrationSection}>
-        <RegistrationCard idPrefix="top" heading="Stop Overthinking. Start Living." ctaLabel="Yes — Reserve My Free Seat" />
+        <RegistrationCard
+          idPrefix="top"
+          heading="Stop Overthinking. Start Living."
+          ctaLabel="Yes — Reserve My Free Seat"
+          form={form}
+          setForm={setForm}
+          error={error}
+          loading={loading}
+          registered={registered}
+          onSubmit={handleSubmit}
+        />
       </section>
 
       {/* ── MAYBE THIS IS YOU ── */}
@@ -375,10 +403,18 @@ export default function MasterclassPage() {
         <div className={styles.narrativeContainer}>
           <p className={styles.sectionEyebrow}>The Pattern</p>
           <h2 className={styles.sectionHeadline}>When Thinking Stops Helping</h2>
-          <div className={styles.narrativeBody}>
-            <p>Your mind is designed to think. To remember. To predict. To protect. To look for answers.</p>
-            <p>But there is a point where useful thinking becomes <strong>overthinking</strong>. And the cycle can look like this:</p>
+          <p className={styles.sectionIntro} style={{ margin: "1rem auto 0" }}>Your mind is designed to:</p>
+
+          <div className={styles.pillWrap}>
+            <span className={styles.pillItem}>Remember</span>
+            <span className={styles.pillItem}>Predict</span>
+            <span className={styles.pillItem}>Protect</span>
+            <span className={styles.pillItem}>Look for Answers</span>
           </div>
+
+          <p className={styles.narrativeEmphasis} style={{ fontSize: "var(--text-lg)" }}>
+            But there is a point where useful thinking becomes <u>overthinking</u>. And the cycle can look like this:
+          </p>
 
           <div className={styles.cycleFlow}>
             {CYCLE_STEPS.map((step, i) => (
@@ -389,10 +425,11 @@ export default function MasterclassPage() {
             ))}
           </div>
 
-          <div className={styles.narrativeBody}>
-            <p>You don&apos;t move forward because you are waiting to feel certain.</p>
-            <p>But life rarely gives us certainty first.</p>
+          <div className={styles.bubbleStack}>
+            <p className={`${styles.bubble} ${styles.bubbleLeft}`}>You don&apos;t move forward because you are waiting to feel certain.</p>
+            <p className={`${styles.bubble} ${styles.bubbleRight}`}>But life rarely gives us certainty first.</p>
           </div>
+
           <p className={styles.narrativeEmphasis}>
             Sometimes clarity doesn&apos;t come from thinking more.<br />It comes from becoming more aware.
           </p>
@@ -534,13 +571,29 @@ export default function MasterclassPage() {
       <section className={`${styles.narrativeSection} ${styles.altBg}`}>
         <div className={styles.narrativeContainer}>
           <h2 className={styles.sectionHeadline}>This Is Not About Fixing You.</h2>
-          <div className={styles.narrativeBody}>
-            <p><strong>You don&apos;t need to be fixed.</strong></p>
-            <p>You need to understand yourself.</p>
-            <p>Because the more clearly you see your thoughts, your patterns, your fears, your choices, the more freedom you have to decide what comes next.</p>
-            <p>You don&apos;t have to transform your entire life tomorrow.</p>
+
+          <p className={styles.narrativeEmphasis} style={{ marginTop: "1.5rem" }}>You don&apos;t need to be fixed.</p>
+          <p className={styles.sectionIntro} style={{ margin: "0.75rem auto 0" }}>You need to understand yourself.</p>
+
+          <div className={styles.mosaicGrid} style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", maxWidth: "560px", margin: "2rem auto" }}>
+            {[
+              { color: "#7c3aed", text: "Your thoughts" },
+              { color: "#d97706", text: "Your patterns" },
+              { color: "#a855f7", text: "Your fears" },
+              { color: "#b45309", text: "Your choices" },
+            ].map(({ color, text }) => (
+              <div key={text} className={styles.mosaicCard} style={{ justifyContent: "center", textAlign: "center", border: `1px solid ${color}33` }}>
+                <span>{text}</span>
+              </div>
+            ))}
           </div>
-          <p className={styles.narrativeEmphasis}>You can begin with one conscious choice.</p>
+
+          <p className={styles.sectionIntro} style={{ margin: "0 auto" }}>
+            The more clearly you see them, the more freedom you have to decide what comes next.
+          </p>
+          <p className={styles.narrativeEmphasis} style={{ marginTop: "1.5rem" }}>
+            You don&apos;t have to transform your entire life tomorrow.<br />You can begin with one conscious choice.
+          </p>
         </div>
       </section>
 
@@ -594,7 +647,17 @@ export default function MasterclassPage() {
 
       {/* ── BOTTOM REGISTRATION: RESERVE YOUR FREE SEAT ── */}
       <section id="register" className={styles.registrationSection}>
-        <RegistrationCard idPrefix="bottom" heading="Reserve Your Free Seat" ctaLabel="Yes — Save My Free Seat" />
+        <RegistrationCard
+          idPrefix="bottom"
+          heading="Reserve Your Free Seat"
+          ctaLabel="Yes — Save My Free Seat"
+          form={form}
+          setForm={setForm}
+          error={error}
+          loading={loading}
+          registered={registered}
+          onSubmit={handleSubmit}
+        />
       </section>
 
       {/* ── FAQ ── */}

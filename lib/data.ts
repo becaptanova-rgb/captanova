@@ -20,7 +20,7 @@ export const AMAZON_KDP_URL =
  * Example for 30th August 2026, 7:00 PM IST:
  *   "2026-08-15T19:00:00+05:30"
  */
-export const MASTERCLASS_DATE_ISO = "2026-08-15T19:00:00+05:30";
+export const MASTERCLASS_DATE_ISO = "2026-08-30T19:00:00+05:30";
 
 export const MASTERCLASS_ZOOM_URL =
   "https://forms.gle/PLACEHOLDER-swap-for-real-zoom-or-webinar-link";
